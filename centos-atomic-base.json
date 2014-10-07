@@ -1,0 +1,19 @@
+{
+    "comment": "CentOS 7 Base Atomic Defs",
+
+    "osname": "centos-atomic",
+    "ref": "centos/7/atomic/x86_64/base",
+    
+    "repos": ["base", "updates," "extras," "rpm-ostree", "epel"],
+
+    "selinux": true,
+
+    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
+                           "centos-release", "kernel", "rpm-ostree", "lvm2"],
+
+    "packages": ["syslinux-extlinux", "e2fsprogs", "xfsprogs",
+                 "selinux-policy-targeted", "audit",
+                 "openssh-server", "openssh-clients", "sudo",
+                 "passwd", "NetworkManager", "vim-minimal"],
+
+}
