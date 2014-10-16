@@ -15,5 +15,7 @@
                  "selinux-policy-targeted", "audit",
                  "openssh-server", "openssh-clients", "sudo",
                  "passwd", "NetworkManager", "vim-minimal"],
+    
+    "default_target": "multi-user.target"
 
 }
