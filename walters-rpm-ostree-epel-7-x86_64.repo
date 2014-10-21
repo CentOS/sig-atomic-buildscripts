@@ -1,0 +1,7 @@
+[rpm-ostree]
+name=Copr repo for rpm-ostree owned by walters
+baseurl=http://copr-be.cloud.fedoraproject.org/results/walters/rpm-ostree/epel-7-$basearch/
+skip_if_unavailable=True
+gpgcheck=0
+enabled=1
+protect=1
