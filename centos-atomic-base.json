@@ -4,7 +4,7 @@
     "osname": "centos-atomic",
     "ref": "centos/7/atomic/x86_64/base",
     
-    "repos": ["base", "updates," "extras," "rpm-ostree", "epel"],
+    "repos": ["base", "updates," "extras," "atomic7-testing", "epel"],
 
     "selinux": true,
 
