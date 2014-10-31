@@ -4,7 +4,7 @@
     "osname": "centos-atomic",
     "ref": "centos/7/atomic/x86_64/base",
     
-    "repos": ["base", "updates," "extras," "rpm-ostree", "epel"],
+    "repos": ["base", "updates," "extras," "atomic7-testing", "virt7-testing"],
 
     "selinux": true,
 
@@ -15,5 +15,7 @@
                  "selinux-policy-targeted", "audit",
                  "openssh-server", "openssh-clients", "sudo",
                  "passwd", "NetworkManager", "vim-minimal"],
+    
+    "default_target": "multi-user.target"
 
 }
