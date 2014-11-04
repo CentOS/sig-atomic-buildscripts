@@ -6,8 +6,9 @@
     "packages": ["tuned", "man-db", "man-pages", "bash-completion",
                  "rsync", "tmux", "net-tools", "nmap-ncat", "bind-utils", "git",
                  "sysstat", "policycoreutils-python", "setools-console", "docker",
-                 "audit", "cloud-init", "geard", "cloud-utils-growpart" ],
+                 "audit", "cloud-init", "cloud-utils-growpart",
+                 "cockpit", "kubernetes", "etcd", "cadvisor"],
 
-    "units": ["docker.service"]
+    "units": ["docker.service", "cockpit.socket"]
 
 }
