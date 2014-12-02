@@ -1,0 +1,13 @@
+<template>
+    <name>rawhide</name>
+    <os>
+        <name>RHEL-7</name>
+        <version>0</version>
+        <arch>x86_64</arch>
+        <install type='url'>
+            <url>https://imcleod.fedorapeople.org/centos_atomic/install-tree-test-v4/</url>
+        </install>
+        <rootpw>ewwwwwww</rootpw>
+    </os>
+</template>
+

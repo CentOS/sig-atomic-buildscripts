@@ -1,0 +1,53 @@
+I've added some initial content to facilitate image creation using Anaconda.
+
+Everything here points to public package sources.  In this case a combination
+of mirror.centos.org and updated Atomic content from cbs.centos.org.
+
+A very quick workflow:
+
+* The Anaconda install image
+
+A public copy of a working rpm-ostree enabled Anaconda is here:
+
+https://imcleod.fedorapeople.org/centos_atomic/install-tree-test-v4/
+
+You can also regenerate the Anaconda install media by running the
+"public_lorax.sh" script.  Please read the script comments about
+the appropriate version of lorax to use for this step.
+
+Note that these are install trees only.  They do not contain any
+composed rpm-ostree content or RPM content.
+
+
+* The composed tree
+
+A public copy of a working composed tree is here:
+
+https://imcleod.fedorapeople.org/centos_atomic/atomic-repo/repo/
+
+This is a compose done on a CentOS 7 host from this JSON file:
+
+centos-atomic-cloud-docker-host.json
+
+The current official public trees from the SIG will not work
+as they are missing grub2.  This should be sorted soon.
+
+
+* The generated image
+
+With Image Factory you can then build a disk image using the updated 
+Anaconda and the composed tree linked above (or another tree composed
+with the same required packages).
+
+A working example invocation can be found in this script:
+
+build_factory_image.sh
+
+This references two additional files, which in turn point at the
+installer image and the composed tree.  The files are:
+
+- centos-atomic-7.tdl - This provides OS version and installer source information
+to factory and points at the example Anaconda install tree link above.
+
+- centos-atomic-host-cloud.ks - This is a kickstart file that uses the new
+"ostreesetup" argument and points to the composed tree link above.
