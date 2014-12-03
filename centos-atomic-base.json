@@ -14,7 +14,8 @@
     "packages": ["syslinux-extlinux", "e2fsprogs", "xfsprogs",
                  "selinux-policy-targeted", "audit",
                  "openssh-server", "openssh-clients", "sudo",
-                 "passwd", "NetworkManager", "vim-minimal"],
+                 "passwd", "NetworkManager", "vim-minimal",
+                 "grub2", "grub2-efi", "ostree-grub2", "lvm2" ],
     
     "default_target": "multi-user.target"
 
