@@ -1,0 +1,14 @@
+<template>
+  <name>CentOS7</name>
+  <os>    
+    <rootpw>ozrootpw</rootpw>
+    <name>RHEL-7</name>    
+    <version>0</version>
+    <arch>x86_64</arch>
+    <install type="url">
+      <url>http://oslab-nib-vm2.openstack.engineering.redhat.com/centos/7.0.1406/os/x86_64/</url>
+    </install>
+  </os>
+  <description>RHEL7</description>
+</template>
+
