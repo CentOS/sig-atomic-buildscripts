@@ -7,7 +7,7 @@
                  "rsync", "tmux", "net-tools", "nmap-ncat", "bind-utils", "git",
                  "sysstat", "policycoreutils-python", "setools-console", "docker",
                  "audit", "cloud-init", "cloud-utils-growpart",
-                 "cockpit", "kubernetes", "etcd", "cadvisor",
+                 "cockpit", "kubernetes", "etcd", "cadvisor","flannel",
                  "centos-release-atomic"],
 
     "units": ["docker.service", "cockpit.socket"]
