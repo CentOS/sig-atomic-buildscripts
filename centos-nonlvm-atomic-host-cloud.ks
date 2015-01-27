@@ -26,7 +26,7 @@ part / --size 3000 --fstype xfs
 #logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
 
 # Equivalent of %include fedora-repo.ks
-ostreesetup --osname="centos" --remote="installmedia" --ref="centos/7/atomic/x86_64/cloud-docker-host" --url="https://imcleod.fedorapeople.org/centos_atomic/atomic-repo/repo/" --nogpg
+ostreesetup --osname="centos" --remote="installmedia" --ref="centos/7/atomic/x86_64/cloud-docker-host" --url="http://buildlogs.centos.org/centos/7/atomic/x86_64/repo/" --nogpg
 
 reboot
 
