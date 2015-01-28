@@ -8,6 +8,8 @@
 
     "selinux": true,
 
+    "initramfs-args": ["--no-hostonly"],
+
     "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
                            "centos-release", "kernel", "rpm-ostree", "lvm2"],
 
