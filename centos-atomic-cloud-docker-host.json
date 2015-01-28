@@ -3,6 +3,8 @@
 
     "ref": "centos/7/atomic/x86_64/cloud-docker-host",
 
+    "repos": ["cloud7-testing"],
+
     "packages": ["tuned", "man-db", "man-pages", "bash-completion",
                  "rsync", "tmux", "net-tools", "nmap-ncat", "bind-utils", "git",
                  "sysstat", "policycoreutils-python", "setools-console", "docker",
