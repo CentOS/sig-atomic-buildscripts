@@ -1,0 +1,14 @@
+<template>
+  <name>CentOS7</name>
+  <os>    
+    <rootpw>ozrootpw</rootpw>
+    <name>RHEL-7</name>    
+    <version>0</version>
+    <arch>x86_64</arch>
+    <install type="url">
+      <url>http://buildlogs.centos.org/centos/7/atomic/x86_64/atomic-anaconda-nightly/latest/</url>
+    </install>
+  </os>
+  <description>RHEL7</description>
+</template>
+

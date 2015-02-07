@@ -13,17 +13,17 @@ firewall --disabled
 bootloader --timeout=1 --append="no_timer_check console=tty1 console=ttyS0,115200n8"
 
 network --bootproto=dhcp --device=eth0 --activate --onboot=on
-services --enabled=network,sshd,rsyslog,cloud-init,cloud-init-local,cloud-config,cloud-final
+services --enabled=sshd,rsyslog,cloud-init,cloud-init-local,cloud-config,cloud-final
+# We use NetworkManager, and Avahi doesn't make much sense in the cloud
+services --disabled=network,avahi-daemon
 
 zerombr
 clearpart --all
-part /boot --size=300 --fstype="xfs"
-part / --size 3000 --fstype xfs
 
-#part /boot --size=300 --fstype="xfs"
-#part pv.01 --grow
-#volgroup atomicos pv.01
-#logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
+part /boot --size=300 --fstype="xfs"
+part pv.01 --grow
+volgroup atomicos pv.01
+logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
 
 # Equivalent of %include fedora-repo.ks
 ostreesetup --osname="centos" --remote="installmedia" --ref="centos/7/atomic/x86_64/cloud-docker-host" --url="http://buildlogs.centos.org/centos/7/atomic/x86_64/repo/" --nogpg
@@ -31,19 +31,11 @@ ostreesetup --osname="centos" --remote="installmedia" --ref="centos/7/atomic/x86
 reboot
 
 %post --erroronfail
-# Default storage for Atomic
-if [ -b /dev/mapper/atomicos-root ]; then
-  lvcreate -l 8%FREE -n docker-meta atomicos
-  lvcreate -l 100%FREE -n docker-data atomicos
 
-  cat <<EOF >> /etc/sysconfig/docker-storage
-
-# Added by Anaconda Atomic post script
-
-DOCKER_STORAGE_OPTIONS=--storage-opt dm.fs=xfs --storage-opt dm.datadev=/dev/mapper/atomicos-docker--data --storage-opt dm.metadatadev=/dev/mapper/atomicos-docker--meta
-
-EOF
-fi
+# Due to an anaconda bug (https://github.com/projectatomic/rpm-ostree/issues/42)
+# we need to install the repo here.
+ostree remote delete centos-atomic-host
+ostree remote add --set=gpg-verify=false centos-atomic-host 'http://buildlogs.centos.org/centos/7/atomic/x86_64/repo'
 
 # older versions of livecd-tools do not follow "rootpw --lock" line above
 # https://bugzilla.redhat.com/show_bug.cgi?id=964299
