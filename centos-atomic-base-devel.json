@@ -1,0 +1,26 @@
+{
+    "comment": "CentOS 7 Base Atomic Development Defs",
+
+    "osname": "centos-atomic",
+    "ref": "centos/7/atomic/x86_64/base-devel",
+    
+    "repos": ["CentOS-Base", "CentOS-updates", "CentOS-extras",
+              "atomic7-testing", "virt7-testing"],
+
+    "selinux": true,
+
+    "initramfs-args": ["--no-hostonly"],
+
+    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
+                           "centos-release", "kernel", "rpm-ostree", "lvm2"],
+
+    "packages": ["syslinux-extlinux", "e2fsprogs", "xfsprogs",
+                 "selinux-policy-targeted", "audit",
+                 "openssh-server", "openssh-clients", "sudo",
+                 "passwd", "NetworkManager", "vim-minimal",
+                 "grub2", "grub2-efi", "ostree-grub2", "lvm2",
+                 "efibootmgr", "shim", "irqbalance" ],
+    
+    "default_target": "multi-user.target"
+
+}
