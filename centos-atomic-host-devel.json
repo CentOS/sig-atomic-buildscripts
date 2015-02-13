@@ -1,0 +1,18 @@
+{
+    "include": "centos-atomic-base-devel.json",
+
+    "ref": "centos/7/atomic/x86_64/cloud-docker-host-devel",
+
+    "initramfs-args": ["--no-hostonly"],
+
+    "packages": ["tuned", "man-db", "man-pages", "bash-completion",
+                 "rsync", "tmux", "net-tools", "nmap-ncat", "bind-utils", "git",
+                 "sysstat", "policycoreutils-python", "setools-console", "docker",
+                 "audit", "cloud-init", "cloud-utils-growpart",
+                 "cockpit", "kubernetes", "etcd", "cadvisor", "flannel",
+                 "centos-release-atomic"],
+
+    "units": ["docker.service", "cockpit.socket"],
+    "default_target": "multi-user.target"
+
+}
