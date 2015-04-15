@@ -12,14 +12,14 @@ test -d ${GitDir} || git clone https://github.com/CentOS/sig-atomic-buildscripts
 cd ${GitDir}; git clean -dfx; git reset --hard origin/master; git pull -r
 
 # backup the last built repo
-#/bin/rsync -Hva --stats /srv/rolling/ /srv/rolling.${DateStamp} > ${LogFile} 2>&1
+/bin/rsync -Hva --stats /srv/rolling/ /srv/rolling.${DateStamp} > ${LogFile} 2>&1
 echo '----------' >> ${LogFile}
 
 # build a new one
 
 rpm-ostree compose --repo=/srv/rolling/ tree centos-atomic-host.json > ${BuildDir}/log.compose 2>&1
 if [ $? -eq '0' ]; then
-#  /bin/rsync -PHvar /srv/nightly/* pushhost::c7-atomic/x86_64/repo/ >> ${LogFile}  2>&1
+  /bin/rsync -PHvar /srv/nightly/* pushhost::c7-atomic/x86_64/repo/ >> ${LogFile}  2>&1
   echo '----------' >> ${LogFile}
 fi
 
@@ -35,5 +35,5 @@ echo '---------- liveimage ' >> ${LogFile}
 rpm-ostree-toolbox liveimage -o pxe-to-live >> ${LogFile} 2>&1 
 echo '----------' >> ${LogFile}
 
-#/bin/rsync -PHvar ${BuildDir} pushhost::c7-atomic/x86_64/Builds/ >> ${LogFile}  2>&1
+/bin/rsync -PHvar ${BuildDir} pushhost::c7-atomic/x86_64/Builds/ >> ${LogFile}  2>&1
 
