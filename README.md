@@ -6,14 +6,17 @@ http://wiki.centos.org/SpecialInterestGroup/Atomic
 
 ### The build process
 
-The scripts used to do nightly builds based on this content are not
-quite public yet. By the upcoming CentOS Atomic SIG meeting (Thursday,
-April 16) we hope to have these scripts in source control, in the SIG
-repo above. The nightly build process will then pull script updates
-from the repo for each build. A rough draft of this, along with some
-notes:
+Builds are run every 12 hrs from cron. 
 
-http://collabedit.com/r38uq
+As step-1, the machine is updated to consume the latest content from 
+CentOS Linux, Atomic SIG testing, Virt SIG testing.
+
+Then a script is run to generate the artifacts and sent to a push server
+this is the build_ostree_components.sh script.
+
+Resulting artifacts are delivered to :
+ * http://buildlogs.centos.org/centos/7/atomic/x86_64/repo/
+ * http://buildlogs.centos.org/centos/7/atomic/x86_64/Builds/
 
 Currently this process is owned by Karanbir Singh.
 
