@@ -12,6 +12,7 @@ test -d ${GitDir} || git clone https://github.com/CentOS/sig-atomic-buildscripts
 cd ${GitDir}; git clean -dfx; git reset --hard origin/master; git pull -r
 
 # backup the last built repo
+#  XXX: We need to only retain the last 14 builds or so, Todo, add a find + rm for older tree's
 /bin/rsync -Hva --stats /srv/rolling/ /srv/rolling.${DateStamp} > ${LogFile} 2>&1
 echo '----------' >> ${LogFile}
 
