@@ -2,7 +2,7 @@
 
 HomeDir=/srv
 DateStamp=$( date  +%Y%m%d_%H%M%S )
-BuildDir=${HomeDir}/builds/${DateStamp}
+BuildDir=$1
 LogFile=${BuildDir}/log
 mkdir -p ${BuildDir}
 GitDir=${HomeDir}/sig-atomic-buildscripts/
