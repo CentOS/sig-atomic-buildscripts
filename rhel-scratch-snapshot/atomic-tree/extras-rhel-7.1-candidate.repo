@@ -1,0 +1,7 @@
+[extras-rhel-7.1-candidate]
+name=Extras RHEL 7.1 Candidate
+enabled=1
+baseurl=http://download.devel.redhat.com/brewroot/repos/extras-rhel-7.1-candidate/latest/x86_64
+metadata_expire=1m
+gpgcheck=0
+exclude=systemd-container

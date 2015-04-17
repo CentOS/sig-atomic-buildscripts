@@ -1,0 +1,84 @@
+{
+    "comment": "Red Hat Enterprise Linux Atomic Host 7.0",
+
+    "osname": "rhel-atomic-host",
+    "ref": "rhel-atomic-host/7/x86_64/standard",
+
+    "repos-comment": "We want kubernetes from extras-rhel-7.1, but docker from extras-rhel-7.0",
+    "repos": ["rhel-7.1-latest-server", "extras-rhel-7.1-candidate",
+	      "atomic-rhel-7.1-build"],
+
+    "selinux": true,
+
+    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
+			   "redhat-release-atomic-host"],
+
+    "install-langs": ["en_US"],
+
+    "documentation": false,
+
+    "initramfs-args": ["--no-hostonly"],
+
+    "postprocess-script": "treecompose-post.sh",
+
+    "etc-group-members": ["wheel", "docker"],
+
+    "ignore-removed-users": ["root"],
+    "ignore-removed-groups": ["root"],
+    "check-passwd": { "type": "file", "filename": "passwd" },
+    "check-groups": { "type": "file", "filename": "group" },
+
+    "packages": ["atomic",
+		 "systemd", "kernel", "rpm-ostree-client",
+		 "dracut-network",
+		 "biosdevname",
+		 "coreutils",
+		 "lvm2",
+		 "grub2", "grub2-efi", "ostree-grub2",
+		 "efibootmgr", "shim",
+		 "e2fsprogs", "xfsprogs",
+		 "mdadm",
+		 "docker",
+		 "docker-python",
+		 "docker-logrotate",
+		 "selinux-policy-targeted",
+		 "sssd",
+		 "cloud-init",
+		 "cloud-utils-growpart",
+		 "tar", "xz", "gzip", "bzip2",
+		 "less",
+		 "kexec-tools",
+		 "bridge-utils",
+                 "nfs-utils",
+		 "subscription-manager",
+		 "subscription-manager-plugin-ostree",
+		 "subscription-manager-plugin-container",
+		 "openssh-server", "openssh-clients",
+		 "chrony",
+		 "logrotate",
+		 "passwd",
+		 "NetworkManager", "vim-minimal", "nano",
+		 "sudo",
+		 "tuned", "tuned-profiles-atomic",
+		 "kubernetes", "etcd", "cadvisor",
+		 "flannel",
+		 "irqbalance",
+		 "bash-completion",
+		 "rsync", "tmux",
+		 "net-tools", "nmap-ncat",
+		 "bind-utils",
+		 "authconfig",
+		 "policycoreutils-python",
+		 "docker-storage-setup",
+		 "setools-console"],
+
+    "remove-from-packages": [["yum", "/usr/bin/.*"],
+			     ["kernel", "/lib/modules/.*/drivers/gpu"],
+			     ["linux-firmware", "/usr/lib/firmware/radeon/.*"],
+			     ["filesystem", "/usr/share/backgrounds"],
+			     ["redhat-logos", "/usr"]],
+
+    "units": ["docker.service", "tuned.service", "docker-storage-setup.service"],
+
+    "default_target": "multi-user.target"
+}

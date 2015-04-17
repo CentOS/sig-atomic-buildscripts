@@ -1,0 +1,7 @@
+[atomic-rhel-7.1-build]
+name=Atomic RHEL 7.1 Build
+enabled=1
+baseurl=http://download.eng.bos.redhat.com/brewroot/repos/atomic-rhel-7.1-build/latest/$basearch
+metadata_expire=1m
+gpgcheck=0
+exclude=systemd-container
