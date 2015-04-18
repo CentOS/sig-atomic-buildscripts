@@ -13,14 +13,14 @@ cd ${GitDir}; git clean -dfx; git reset --hard origin/master; git pull -r
 
 # backup the last built repo
 #  XXX: We need to only retain the last 14 builds or so, Todo, add a find + rm for older tree's
-/bin/rsync -Hva --stats /srv/rolling/ /srv/rolling.${DateStamp} > ${LogFile} 2>&1
+/bin/rsync -Ha --stats /srv/rolling/ /srv/rolling.${DateStamp} > ${LogFile} 2>&1
 echo '----------' >> ${LogFile}
 
 # build a new one
 
 rpm-ostree compose --repo=/srv/rolling/ tree centos-atomic-host.json > ${BuildDir}/log.compose 2>&1
 if [ $? -eq '0' ]; then
-  /bin/rsync -PHvar /srv/nightly/* pushhost::c7-atomic/x86_64/repo/ >> ${LogFile}  2>&1
+  /bin/rsync -PHa --stats /srv/rolling/* pushhost::c7-atomic/x86_64/repo/ >> ${LogFile}  2>&1
   echo '----------' >> ${LogFile}
 fi
 
