@@ -26,7 +26,7 @@ volgroup atomicos pv.01
 logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
 
 # Equivalent of %include fedora-repo.ks
-ostreesetup --osname="rhel-atomic-host" --remote="rhel-atomic-host" --ref="rhel-atomic-host/7/x86_64/standard" --url="http://cdn.stage.redhat.com/content/dist/rhel/atomic/7/7Server/x86_64/ostree/repo/" --nogpg
+ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-host" --ref="centos-atomic-host/7/x86_64/standard" --url="http://vm-118-178-132-209.osop.rhcloud.com/centos-atomic-downstream/repo/" --nogpg
 
 reboot
 
@@ -34,8 +34,8 @@ reboot
 
 # For RHEL, it doesn't make sense to have a default remote configuration,
 # because you need to use subscription manager.
-rm /etc/ostree/remotes.d/*.conf
-echo 'unconfigured-state=This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.' >> $(ostree admin --print-current-dir).origin
+#rm /etc/ostree/remotes.d/*.conf
+#echo 'unconfigured-state=This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.' >> $(ostree admin --print-current-dir).origin
 
 # Anaconda is writing a /etc/resolv.conf from the generating environment.
 # The system should start out with an empty file.

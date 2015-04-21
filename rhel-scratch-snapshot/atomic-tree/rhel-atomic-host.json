@@ -1,17 +1,15 @@
 {
-    "comment": "Red Hat Enterprise Linux Atomic Host 7.0",
+    "comment": "CentOS adaptation of RHEL Atomic host",
 
-    "osname": "rhel-atomic-host",
-    "ref": "rhel-atomic-host/7/x86_64/standard",
+    "osname": "centos-atomic-host",
+    "ref": "centos-atomic-host/7/x86_64/standard",
 
-    "repos-comment": "We want kubernetes from extras-rhel-7.1, but docker from extras-rhel-7.0",
-    "repos": ["rhel-7.1-latest-server", "extras-rhel-7.1-candidate",
-	      "atomic-rhel-7.1-build"],
+    "repos": ["CentOS-Base", "CentOS-updates", "CentOS-extras",
+              "rhel-atomic-rebuild"],
 
     "selinux": true,
 
-    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
-			   "redhat-release-atomic-host"],
+    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils"],
 
     "install-langs": ["en_US"],
 
@@ -28,8 +26,7 @@
     "check-passwd": { "type": "file", "filename": "passwd" },
     "check-groups": { "type": "file", "filename": "group" },
 
-    "packages": ["atomic",
-		 "systemd", "kernel", "rpm-ostree-client",
+    "packages": ["systemd", "kernel", "rpm-ostree-client",
 		 "dracut-network",
 		 "biosdevname",
 		 "coreutils",
@@ -50,9 +47,6 @@
 		 "kexec-tools",
 		 "bridge-utils",
                  "nfs-utils",
-		 "subscription-manager",
-		 "subscription-manager-plugin-ostree",
-		 "subscription-manager-plugin-container",
 		 "openssh-server", "openssh-clients",
 		 "chrony",
 		 "logrotate",
@@ -72,11 +66,9 @@
 		 "docker-storage-setup",
 		 "setools-console"],
 
-    "remove-from-packages": [["yum", "/usr/bin/.*"],
-			     ["kernel", "/lib/modules/.*/drivers/gpu"],
+    "remove-from-packages": [["kernel", "/lib/modules/.*/drivers/gpu"],
 			     ["linux-firmware", "/usr/lib/firmware/radeon/.*"],
-			     ["filesystem", "/usr/share/backgrounds"],
-			     ["redhat-logos", "/usr"]],
+			     ["filesystem", "/usr/share/backgrounds"]],
 
     "units": ["docker.service", "tuned.service", "docker-storage-setup.service"],
 
