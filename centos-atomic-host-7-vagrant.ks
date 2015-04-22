@@ -6,6 +6,7 @@
 services --disabled=cloud-init,cloud-init-local,cloud-config,cloud-final
 
 user --name=vagrant --password=vagrant
+user --name=root --password=vagrant
 
 %post --erroronfail
 
