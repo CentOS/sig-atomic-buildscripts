@@ -21,7 +21,7 @@ echo '----------' >> ${LogFile}
 rpm-ostree compose --repo=/srv/rolling/ tree centos-atomic-host.json > ${BuildDir}/log.compose 2>&1
 if [ $? -eq '0' ]; then
   # now we sign it
-  ostree gpg-sign >> ${LogFile} 
+  ostree --repo=/srv/rolling gpg-sign centos/7/atomic/x86_64/cloud-docker-host 0xA866D7CCAE087291 >> ${LogFile} 
   echo '----------' >> ${LogFile}
   if [ $? -eq 0 ]; then 
     /bin/rsync -PHa --stats /srv/rolling/* pushhost::c7-atomic/x86_64/repo/ >> ${LogFile}  2>&1
