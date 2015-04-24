@@ -1,5 +1,0 @@
-[local-overrides]
-enabled=1
-baseurl=http://192.168.122.1/rhel-atomic-host/local-overrides
-metadata_expire=1m
-gpgcheck=0
