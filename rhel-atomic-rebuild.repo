@@ -1,0 +1,5 @@
+[rhel-atomic-rebuild]
+name=rhel-atomic-rebuild
+baseurl=http://buildlogs.centos.org/cah-0.0.1/
+gpgcheck=0
+exclude=systemd-container
