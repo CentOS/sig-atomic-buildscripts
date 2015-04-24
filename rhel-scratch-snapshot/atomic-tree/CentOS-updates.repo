@@ -1,9 +1,0 @@
-
-#released updates 
-[CentOS-updates]
-name=CentOS-releasever - Updates
-mirrorlist=http://mirrorlist.centos.org/?release=7&arch=$basearch&repo=updates&infra=$infra
-#baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/
-gpgcheck=1
-gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
-exclude=cloud-utils-growpart

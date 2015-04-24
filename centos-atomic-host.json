@@ -1,18 +1,76 @@
 {
-    "include": "centos-atomic-base.json",
+    "comment": "CentOS adaptation of RHEL Atomic host",
 
-    "ref": "centos/7/atomic/x86_64/cloud-docker-host",
+    "osname": "centos-atomic-host",
+    "ref": "centos-atomic-host/7/x86_64/standard",
+
+    "repos": ["CentOS-Base", "CentOS-updates", "CentOS-extras",
+              "rhel-atomic-rebuild"],
+
+    "selinux": true,
+
+    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils"],
+
+    "install-langs": ["en_US"],
+
+    "documentation": false,
 
     "initramfs-args": ["--no-hostonly"],
 
-    "packages": ["tuned", "man-db", "man-pages", "bash-completion",
-                 "rsync", "tmux", "net-tools", "nmap-ncat", "bind-utils", "git",
-                 "sysstat", "policycoreutils-python", "setools-console", "docker",
-                 "audit", "cloud-init", "cloud-utils-growpart", "atomic", "tar",
-                 "cockpit", "kubernetes", "etcd", "cadvisor", "flannel",
-                 "centos-release-atomic"],
+    "postprocess-script": "treecompose-post.sh",
 
-    "units": ["docker.service", "cockpit.socket"],
+    "etc-group-members": ["wheel", "docker"],
+
+    "ignore-removed-users": ["root"],
+    "ignore-removed-groups": ["root"],
+    "check-passwd": { "type": "file", "filename": "passwd" },
+    "check-groups": { "type": "file", "filename": "group" },
+
+    "packages": ["systemd", "kernel", "rpm-ostree-client",
+		 "dracut-network",
+		 "biosdevname",
+		 "coreutils",
+		 "lvm2",
+		 "grub2", "grub2-efi", "ostree-grub2",
+		 "efibootmgr", "shim",
+		 "e2fsprogs", "xfsprogs",
+		 "mdadm",
+		 "docker",
+		 "docker-python",
+		 "docker-logrotate",
+		 "selinux-policy-targeted",
+		 "sssd",
+		 "cloud-init",
+		 "cloud-utils-growpart",
+		 "tar", "xz", "gzip", "bzip2",
+		 "less",
+		 "kexec-tools",
+		 "bridge-utils",
+                 "nfs-utils",
+		 "openssh-server", "openssh-clients",
+		 "chrony",
+		 "logrotate",
+		 "passwd",
+		 "NetworkManager", "vim-minimal", "nano",
+		 "sudo",
+		 "tuned", "tuned-profiles-atomic",
+		 "kubernetes", "etcd", "cadvisor",
+		 "flannel",
+		 "irqbalance",
+		 "bash-completion",
+		 "rsync", "tmux",
+		 "net-tools", "nmap-ncat",
+		 "bind-utils",
+		 "authconfig",
+		 "policycoreutils-python",
+		 "docker-storage-setup",
+		 "setools-console"],
+
+    "remove-from-packages": [["kernel", "/lib/modules/.*/drivers/gpu"],
+			     ["linux-firmware", "/usr/lib/firmware/radeon/.*"],
+			     ["filesystem", "/usr/share/backgrounds"]],
+
+    "units": ["docker.service", "tuned.service", "docker-storage-setup.service"],
+
     "default_target": "multi-user.target"
-
 }
