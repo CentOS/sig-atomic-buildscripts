@@ -27,7 +27,8 @@
     "check-groups": { "type": "file", "filename": "group" },
 
     "packages": ["systemd", "kernel", "rpm-ostree-client",
-		 "dracut-network",
+		 "atomic",
+                 "dracut-network",
 		 "biosdevname",
 		 "coreutils",
 		 "lvm2",
