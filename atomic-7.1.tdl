@@ -1,11 +1,11 @@
 <template>
-    <name>rawhide</name>
+    <name>centos7atomic</name>
     <os>
         <name>RHEL-7</name>
         <version>0</version>
         <arch>x86_64</arch>
         <install type='url'>
-            <url>http://installtreehost/installer/lorax</url>
+            <url>http://172.19.3.16:8000/installer/lorax/</url>
         </install>
         <rootpw>ewwwwwww</rootpw>
     </os>

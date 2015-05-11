@@ -18,11 +18,11 @@ cd $HomeDir
 
 # create repo
 
-# ostree --repo=/srv/rolling init --mode=archive-z2
+#ostree --repo=/srv/rolling init --mode=archive-z2
 
 # build a new one
 
-#rpm-ostree compose --repo=/srv/rolling/ tree ${GitDir}/centos-atomic-host.json > ${BuildDir}/log.compose 2>&1
+rpm-ostree compose --repo=/srv/rolling/ tree ${GitDir}/centos-atomic-host.json > ${BuildDir}/log.compose 2>&1
 #if [ $? -eq '0' ]; then
   # now we sign it
 #  ostree --repo=/srv/rolling gpg-sign centos/7/atomic/x86_64/cloud-docker-host 0xA866D7CCAE087291 >> ${LogFile} 
@@ -35,7 +35,9 @@ cd $HomeDir
 
 # the installer output dir referenced below must be made to exist
 
-mkdir -p ${HomeDir}/installer/
+#mkdir -p ${HomeDir}/installer/
+rm -rf ${HomeDir}/installer/lorax
+
 
 # docker needs to be running
 
@@ -43,14 +45,20 @@ systemctl start docker
 
 cd ${BuildDir}
 echo '---------- installer ' >> ${LogFile}
-#rpm-ostree-toolbox installer -c  ${GitDir}/config.ini -o ${HomeDir}/installer >> ${LogFile} 2>&1
+rpm-ostree-toolbox installer -c  ${GitDir}/config.ini -o ${HomeDir}/installer >> ${LogFile} 2>&1
 rpm-ostree-toolbox installer --ostreerepo ${HomeDir}/rolling/ -c  ${GitDir}/config.ini -o ${HomeDir}/installer >> ${LogFile} 2>&1
 # we likely need to push the installer content to somewhere the following kickstart
 #  can pick the content from ( does it otherwise work with a file:/// url ? unlikely )
+
+# I used python -m SimpleHTTPServer 8000 &
+
 echo '---------- Vagrant ' >> ${LogFile}
-rpm-ostree-toolbox imagefactory --tdl ${GitDir}/atomic-7.1.tdl -i kvm -i vagrant-libvirt -i vagrant-virtualbox -k ${GitDir}/atomic-7.1-cloud.ks --vkickstart ${GitDir}/atomic-7.1-vagrant.ks -o virt >> ${LogFile}  2>&1
-echo '---------- liveimage ' >> ${LogFile}
-rpm-ostree-toolbox liveimage -o pxe-to-live >> ${LogFile} 2>&1 
+rpm-ostree-toolbox imagefactory --ostreerepo ${HomeDir}/rolling --tdl ${GitDir}/atomic-7.1.tdl -c  ${GitDir}/config.ini -i kvm -i vagrant-libvirt -i vagrant-virtualbox -k ${GitDir}/atomic-7.1-cloud.ks --vkickstart ${GitDir}/atomic-7.1-vagrant.ks -o virt --ostreerepo /srv/rolling >> ${LogFile}  2>&1
+
+# TODO we need a liveimage ks for this part
+
+#echo '---------- liveimage ' >> ${LogFile}
+#rpm-ostree-toolbox liveimage -c  ${GitDir}/config.ini -o pxe-to-live >> ${LogFile} 2>&1
 echo '----------' >> ${LogFile}
 
 #/bin/rsync -PHvar ${BuildDir} pushhost::c7-atomic/x86_64/Builds/ >> ${LogFile}  2>&1
