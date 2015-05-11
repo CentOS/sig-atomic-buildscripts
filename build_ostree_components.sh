@@ -52,7 +52,7 @@ rpm-ostree-toolbox installer --ostreerepo ${HomeDir}/repo/ -c  ${GitDir}/config.
 # I used python -m SimpleHTTPServer 8000 &
 
 echo '---------- Vagrant ' >> ${LogFile}
-rpm-ostree-toolbox imagefactory --ostreerepo ${HomeDir}/repo --tdl ${GitDir}/atomic-7.1.tdl -c  ${GitDir}/config.ini -i kvm -i vagrant-libvirt -i vagrant-virtualbox -k ${GitDir}/atomic-7.1-cloud.ks --vkickstart ${GitDir}/atomic-7.1-vagrant.ks -o virt  >> ${LogFile}  2>&1
+rpm-ostree-toolbox imagefactory --ostreerepo ${HomeDir}/repo --tdl ${GitDir}/atomic-7.1.tdl -c  ${GitDir}/config.ini -i kvm -i vagrant-libvirt -i vagrant-virtualbox -k ${GitDir}/atomic-7.1-cloud.ks --vkickstart ${GitDir}/atomic-7.1-vagrant.ks -o ${BuildDir}/virt  >> ${LogFile}  2>&1
 
 mkdir -p ${HomeDir}/images/
 cp -r ${BuildDir}/virt/* ${HomeDir}/images/
