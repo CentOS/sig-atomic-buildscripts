@@ -25,7 +25,7 @@ part pv.01 --grow
 volgroup atomicos pv.01
 logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
 
-ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-host" --ref="centos-atomic-host/7/x86_64/standard" --url="http://172.19.3.16/repo/" --nogpg
+ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-host" --ref="centos-atomic-host/7/x86_64/standard" --url="http://172.19.3.16:8000/repo/" --nogpg
 
 reboot
 
