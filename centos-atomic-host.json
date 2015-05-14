@@ -48,6 +48,9 @@
 		 "kexec-tools",
 		 "bridge-utils",
                  "nfs-utils",
+		 "subscription-manager",
+		 "subscription-manager-plugin-ostree",
+		 "subscription-manager-plugin-container",
 		 "openssh-server", "openssh-clients",
 		 "chrony",
 		 "logrotate",
@@ -67,7 +70,8 @@
 		 "docker-storage-setup",
 		 "setools-console"],
 
-    "remove-from-packages": [["kernel", "/lib/modules/.*/drivers/gpu"],
+    "remove-from-packages": [["yum", "/usr/bin/.*"],
+			     ["kernel", "/lib/modules/.*/drivers/gpu"],
 			     ["linux-firmware", "/usr/lib/firmware/radeon/.*"],
 			     ["filesystem", "/usr/share/backgrounds"]],
 
