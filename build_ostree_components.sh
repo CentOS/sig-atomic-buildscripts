@@ -62,12 +62,6 @@ rpm-ostree compose --repo=${HomeDir}/repo/ tree ${GitDir}/centos-atomic-host.jso
 #  fi
 #fi
 
-## the installer output dir referenced below must be made to exist,
-## and must be emptied if it already exists
-
-mkdir -p ${HomeDir}/installer/
-rm -rf ${HomeDir}/installer/lorax
-
 ## docker and libvirt need to be running
 
 systemctl start docker
@@ -77,7 +71,7 @@ systemctl start libvirtd
 
 cd ${BuildDir}
 echo '---------- installer ' >> ${LogFile}
-rpm-ostree-toolbox installer --ostreerepo ${HomeDir}/repo -c  ${GitDir}/config.ini -o ${HomeDir}/installer >> ${LogFile} 2>&1
+rpm-ostree-toolbox installer --overwrite --ostreerepo ${HomeDir}/repo -c  ${GitDir}/config.ini -o ${HomeDir}/installer |& tee ${LogFile}
 
 # we likely need to push the installer content to somewhere the following kickstart
 #  can pick the content from ( does it otherwise work with a file:/// url ? unlikely )
