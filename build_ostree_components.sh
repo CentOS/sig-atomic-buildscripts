@@ -39,7 +39,9 @@ set -o pipefail
 
 ## create repo in HomeDir, this will fail w/o issue if already exists
 
-ostree --repo=${HomeDir}/repo init --mode=archive-z2
+if ! test -d ${HomeDir}/repo/objects; then
+    ostree --repo=${HomeDir}/repo init --mode=archive-z2
+fi
 
 ## compose a new tree, based on defs in centos-atomic-host.json
 
