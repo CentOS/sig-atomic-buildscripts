@@ -15,7 +15,7 @@
 
     "documentation": false,
 
-    "initramfs-args": ["--no-hostonly"],
+    "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
 
     "postprocess-script": "treecompose-post.sh",
 
@@ -26,9 +26,9 @@
     "check-passwd": { "type": "file", "filename": "passwd" },
     "check-groups": { "type": "file", "filename": "group" },
 
-    "packages": ["systemd", "kernel", "rpm-ostree-client",
-		 "atomic",
-                 "dracut-network",
+    "packages": ["atomic",
+		 "systemd", "kernel", "rpm-ostree-client",
+		 "dracut-network",
 		 "biosdevname",
 		 "coreutils",
 		 "lvm2",
@@ -38,7 +38,6 @@
 		 "mdadm",
 		 "docker",
 		 "docker-python",
-		 "docker-logrotate",
 		 "selinux-policy-targeted",
 		 "sssd",
 		 "cloud-init",
@@ -46,6 +45,7 @@
 		 "tar", "xz", "gzip", "bzip2",
 		 "less",
 		 "kexec-tools",
+		 "iscsi-initiator-utils",
 		 "bridge-utils",
                  "nfs-utils",
 		 "subscription-manager",
@@ -58,7 +58,7 @@
 		 "NetworkManager", "vim-minimal", "nano",
 		 "sudo",
 		 "tuned", "tuned-profiles-atomic",
-		 "kubernetes", "etcd", "cadvisor",
+		 "kubernetes", "etcd",
 		 "flannel",
 		 "irqbalance",
 		 "bash-completion",
