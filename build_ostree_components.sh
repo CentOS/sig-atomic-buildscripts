@@ -69,9 +69,8 @@ systemctl start libvirtd
 
 ## This part creates an install tree and install iso 
 
-cd ${BuildDir}
 echo '---------- installer ' >> ${LogFile}
-rpm-ostree-toolbox installer --overwrite --ostreerepo ${HomeDir}/repo -c  ${GitDir}/config.ini -o ${HomeDir}/installer |& tee ${LogFile}
+rpm-ostree-toolbox installer --overwrite --ostreerepo ${HomeDir}/repo -c  ${GitDir}/config.ini -o ${BuildDir}/installer |& tee ${LogFile}
 
 # we likely need to push the installer content to somewhere the following kickstart
 #  can pick the content from ( does it otherwise work with a file:/// url ? unlikely )
