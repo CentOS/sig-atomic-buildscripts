@@ -45,7 +45,7 @@ fi
 
 ## compose a new tree, based on defs in centos-atomic-host.json
 
-rpm-ostree compose --repo=${HomeDir}/repo/ tree ${GitDir}/centos-atomic-host.json > ${BuildDir}/log.compose 2>&1
+rpm-ostree compose --repo=${HomeDir}/repo/ tree ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
 
 ## tree-signing, commented out for now
 
