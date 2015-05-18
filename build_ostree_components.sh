@@ -15,14 +15,12 @@
 ## the desired ostree repo in line beginning w/ "ostreesetup"
 
 
-HomeDir=/srv
+HomeDir=$(pwd)
 DateStamp=$( date  +%Y%m%d_%H%M%S )
 BuildDir=$1
 LogFile=${BuildDir}/log
 mkdir -p ${BuildDir}
 GitDir=${HomeDir}/sig-atomic-buildscripts/
-
-cd $HomeDir
 
 ## update script from git, commented out for now
 
