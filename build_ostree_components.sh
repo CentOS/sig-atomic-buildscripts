@@ -15,14 +15,16 @@
 ## the desired ostree repo in line beginning w/ "ostreesetup"
 
 
-HomeDir=/srv
+HomeDir=$(pwd)
 DateStamp=$( date  +%Y%m%d_%H%M%S )
-BuildDir=$1
+BuildDir=$(cd $1 && pwd)
 LogFile=${BuildDir}/log
 mkdir -p ${BuildDir}
 GitDir=${HomeDir}/sig-atomic-buildscripts/
 
-cd $HomeDir
+set -x
+set -e
+set -o pipefail
 
 ## update script from git, commented out for now
 
@@ -37,11 +39,13 @@ cd $HomeDir
 
 ## create repo in HomeDir, this will fail w/o issue if already exists
 
-ostree --repo=${HomeDir}/repo init --mode=archive-z2
+if ! test -d ${HomeDir}/repo/objects; then
+    ostree --repo=${HomeDir}/repo init --mode=archive-z2
+fi
 
 ## compose a new tree, based on defs in centos-atomic-host.json
 
-rpm-ostree compose --repo=${HomeDir}/repo/ tree ${GitDir}/centos-atomic-host.json > ${BuildDir}/log.compose 2>&1
+rpm-ostree compose --repo=${HomeDir}/repo/ tree ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
 
 ## tree-signing, commented out for now
 
@@ -58,12 +62,6 @@ rpm-ostree compose --repo=${HomeDir}/repo/ tree ${GitDir}/centos-atomic-host.jso
 #  fi
 #fi
 
-## the installer output dir referenced below must be made to exist,
-## and must be emptied if it already exists
-
-mkdir -p ${HomeDir}/installer/
-rm -rf ${HomeDir}/installer/lorax
-
 ## docker and libvirt need to be running
 
 systemctl start docker
@@ -73,14 +71,14 @@ systemctl start libvirtd
 
 cd ${BuildDir}
 echo '---------- installer ' >> ${LogFile}
-rpm-ostree-toolbox installer --ostreerepo ${HomeDir}/repo -c  ${GitDir}/config.ini -o ${HomeDir}/installer >> ${LogFile} 2>&1
+rpm-ostree-toolbox installer --overwrite --ostreerepo ${HomeDir}/repo -c  ${GitDir}/config.ini -o ${HomeDir}/installer |& tee ${LogFile}
 
 # we likely need to push the installer content to somewhere the following kickstart
 #  can pick the content from ( does it otherwise work with a file:/// url ? unlikely )
 # I used python -m SimpleHTTPServer 8000 &
 
 echo '---------- Vagrant ' >> ${LogFile}
-rpm-ostree-toolbox imagefactory --ostreerepo ${HomeDir}/repo --tdl ${GitDir}/atomic-7.1.tdl -c  ${GitDir}/config.ini -i kvm -i vagrant-libvirt -i vagrant-virtualbox -k ${GitDir}/atomic-7.1-cloud.ks --vkickstart ${GitDir}/atomic-7.1-vagrant.ks -o ${BuildDir}/virt  >> ${LogFile}  2>&1
+rpm-ostree-toolbox imagefactory --overwrite --tdl ${GitDir}/atomic-7.1.tdl -c  ${GitDir}/config.ini -i kvm -i vagrant-libvirt -i vagrant-virtualbox -k ${GitDir}/atomic-7.1-cloud.ks --vkickstart ${GitDir}/atomic-7.1-vagrant.ks -o ${BuildDir}/virt |& tee ${LogFile}
 
 
 ## Make a place to copy finished images
