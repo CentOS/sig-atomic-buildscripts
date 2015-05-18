@@ -22,6 +22,10 @@ LogFile=${BuildDir}/log
 mkdir -p ${BuildDir}
 GitDir=${HomeDir}/sig-atomic-buildscripts/
 
+set -x
+set -e
+set -o pipefail
+
 ## update script from git, commented out for now
 
 #test -d ${GitDir} || git clone https://github.com/CentOS/sig-atomic-buildscripts
