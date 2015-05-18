@@ -17,9 +17,11 @@
 
 HomeDir=$(pwd)
 DateStamp=$( date  +%Y%m%d_%H%M%S )
-BuildDir=$(cd $1 && pwd)
+BuildDir=$1
 LogFile=${BuildDir}/log
 mkdir -p ${BuildDir}
+# Make it absolute
+BuildDir=$(cd $BuildDir && pwd)
 GitDir=${HomeDir}/sig-atomic-buildscripts/
 
 set -x
