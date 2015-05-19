@@ -39,6 +39,10 @@ set -o pipefail
 cp -f rhel-atomic-rebuild.repo /etc/yum.repos.d/
 yum -y install ostree rpm-ostree docker libvirt
 
+cp -f atomic7-testing.repo /etc/yum.repos.d/
+echo 'enabled=0' >> /etc/yum.repos.d/atomic7-testing.repo
+yum --enablerepo=atomic7-testing -y install rpm-ostree-toolbox
+
 ## update script from git, commented out for now
 
 #test -d ${GitDir} || git clone https://github.com/CentOS/sig-atomic-buildscripts
