@@ -43,6 +43,9 @@ cp -f ${GitDir}/atomic7-testing.repo /etc/yum.repos.d/
 echo 'enabled=0' >> /etc/yum.repos.d/atomic7-testing.repo
 yum --enablerepo=atomic7-testing -y install rpm-ostree-toolbox
 
+service firewalld stop
+service iptables stop
+
 ## update script from git, commented out for now
 
 #test -d ${GitDir} || git clone https://github.com/CentOS/sig-atomic-buildscripts
@@ -91,7 +94,7 @@ rpm-ostree-toolbox installer --overwrite --ostreerepo ${HomeDir}/repo -c  ${GitD
 
 # we likely need to push the installer content to somewhere the following kickstart
 #  can pick the content from ( does it otherwise work with a file:/// url ? unlikely )
-# I used python -m SimpleHTTPServer 8000 &
+python -m SimpleHTTPServer 8000 &
 
 echo '---------- Vagrant ' >> ${LogFile}
 rpm-ostree-toolbox imagefactory --overwrite --tdl ${GitDir}/atomic-7.1.tdl -c  ${GitDir}/config.ini -i kvm -i vagrant-libvirt -i vagrant-virtualbox -k ${GitDir}/atomic-7.1-cloud.ks --vkickstart ${GitDir}/atomic-7.1-vagrant.ks -o ${BuildDir}/virt |& tee ${LogFile}
