@@ -5,7 +5,7 @@
         <version>0</version>
         <arch>x86_64</arch>
         <install type='url'>
-            <url>http://buildlogs.centos.org/centos/7/atomic/x86_64/atomic-anaconda-nightly/latest/</url>
+            <url>http://BUILDHOST/builddir/installer/images/</url>
         </install>
         <rootpw>ewwwwwww</rootpw>
     </os>
