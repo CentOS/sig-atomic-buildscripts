@@ -14,6 +14,7 @@
 ## atomic-7.1-cloud.ks and atomic-7.1-vagrant.ks must point to
 ## the desired ostree repo in line beginning w/ "ostreesetup"
 
+VERSION="7.1.2"
 
 HomeDir=$(pwd)
 DateStamp=$( date  +%Y%m%d_%H%M%S )
@@ -47,7 +48,7 @@ fi
 
 ## compose a new tree, based on defs in centos-atomic-host.json
 
-rpm-ostree compose --repo=${HomeDir}/repo/ tree ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
+rpm-ostree compose --repo=${HomeDir}/repo/ tree --add-metadata-string=version=${VERSION} ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
 
 ## tree-signing, commented out for now
 
