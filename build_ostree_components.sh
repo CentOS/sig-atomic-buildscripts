@@ -22,11 +22,22 @@ LogFile=${BuildDir}/log
 mkdir -p ${BuildDir}
 # Make it absolute
 BuildDir=$(cd $BuildDir && pwd)
-GitDir=${HomeDir}/sig-atomic-buildscripts/
+
+# this is a bit of a hack, we need a better way ( or a fixed place
+# to always expect the GitDir, ideally under BuildDir
+if [ -e ${HomeDir}/centos-atomic-host.json ]; then
+  GitDir=${HomeDir}
+else
+  GitDir=${HomeDir}/sig-atomic-buildscripts
+fi
 
 set -x
 set -e
 set -o pipefail
+
+# Init, make sure we have the bits we need installed. 
+cp -f rhel-atomic-rebuild.repo /etc/yum.repos.d/
+yum -y install ostree rpm-ostree docker libvirt
 
 ## update script from git, commented out for now
 
