@@ -85,7 +85,7 @@ rpm-ostree-toolbox imagefactory --overwrite --tdl ${GitDir}/atomic-7.1.tdl -c  $
 
 mkdir -p ${HomeDir}/images/
 cp -r ${BuildDir}/virt/* ${HomeDir}/images/
-cp ${HomeDir}/installer/lorax/images/installer.iso ${HomeDir}/images/centos-atomic-host-7.iso
+cp ${HomeDir}/builddir/installer/images/images/installer.iso ${HomeDir}/images/centos-atomic-host-7.iso
 rm -rf ${BuildDir}/virt
 
 # TODO we need a liveimage ks for this part
