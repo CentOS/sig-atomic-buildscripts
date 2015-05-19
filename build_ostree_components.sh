@@ -17,9 +17,11 @@
 
 HomeDir=$(pwd)
 DateStamp=$( date  +%Y%m%d_%H%M%S )
-BuildDir=$(cd $1 && pwd)
+BuildDir=$1
 LogFile=${BuildDir}/log
 mkdir -p ${BuildDir}
+# Make it absolute
+BuildDir=$(cd $BuildDir && pwd)
 GitDir=${HomeDir}/sig-atomic-buildscripts/
 
 set -x
@@ -69,9 +71,8 @@ systemctl start libvirtd
 
 ## This part creates an install tree and install iso 
 
-cd ${BuildDir}
 echo '---------- installer ' >> ${LogFile}
-rpm-ostree-toolbox installer --overwrite --ostreerepo ${HomeDir}/repo -c  ${GitDir}/config.ini -o ${HomeDir}/installer |& tee ${LogFile}
+rpm-ostree-toolbox installer --overwrite --ostreerepo ${HomeDir}/repo -c  ${GitDir}/config.ini -o ${BuildDir}/installer |& tee ${LogFile}
 
 # we likely need to push the installer content to somewhere the following kickstart
 #  can pick the content from ( does it otherwise work with a file:/// url ? unlikely )
