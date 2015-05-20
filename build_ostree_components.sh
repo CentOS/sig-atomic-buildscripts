@@ -37,7 +37,7 @@ set -o pipefail
 
 # Init, make sure we have the bits we need installed. 
 cp -f ${GitDir}/rhel-atomic-rebuild.repo /etc/yum.repos.d/
-yum -y install ostree rpm-ostree docker libvirt epel-release
+yum -y install ostree rpm-ostree docker libvirt epel-release lsof
 
 cp -f ${GitDir}/atomic7-testing.repo /etc/yum.repos.d/
 echo 'enabled=0' >> /etc/yum.repos.d/atomic7-testing.repo
@@ -94,6 +94,12 @@ rpm-ostree-toolbox installer --overwrite --ostreerepo ${HomeDir}/repo -c  ${GitD
 
 # we likely need to push the installer content to somewhere the following kickstart
 #  can pick the content from ( does it otherwise work with a file:/// url ? unlikely )
+lsof -i :8000 > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+  for pid in $(lsof -n -i :8000 | grep -v PID | awk '{print $2}' | sort -u); do
+    kill -9 $pid
+  done
+fi
 python -m SimpleHTTPServer 8000 &
 
 echo '---------- Vagrant ' >> ${LogFile}
