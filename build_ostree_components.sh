@@ -15,41 +15,35 @@
 ## the desired ostree repo in line beginning w/ "ostreesetup"
 
 
-HomeDir=$(pwd)
 DateStamp=$( date  +%Y%m%d_%H%M%S )
 BuildDir=$1
 LogFile=${BuildDir}/log
 mkdir -p ${BuildDir}
 # Make it absolute
 BuildDir=$(cd $BuildDir && pwd)
-
-# this is a bit of a hack, we need a better way ( or a fixed place
-# to always expect the GitDir, ideally under BuildDir
-if [ -e ${HomeDir}/centos-atomic-host.json ]; then
-  GitDir=${HomeDir}
-else
-  GitDir=${HomeDir}/sig-atomic-buildscripts
-fi
+GitDir=${BuildDir}/sig-atomic-buildscripts
+OstreeRepoDir=/srv/repo && mkdir -p $OstreeRepoDir
+ln -s ${OstreeRepoDir} ${BuildDir}/repo
 
 set -x
 set -e
 set -o pipefail
 
+## update script from git, commented out for now
+cd ${BuildDir}
+git clone https://github.com/kbsingh/sig-atomic-buildscripts && cd sig-atomic-buildscripts && git checkout downstream
+cd ${BuildDir}
+
 # Init, make sure we have the bits we need installed. 
 cp -f ${GitDir}/rhel-atomic-rebuild.repo /etc/yum.repos.d/
-yum -y install ostree rpm-ostree docker libvirt epel-release lsof
+yum -y install ostree rpm-ostree docker libvirt epel-release
 
 cp -f ${GitDir}/atomic7-testing.repo /etc/yum.repos.d/
 echo 'enabled=0' >> /etc/yum.repos.d/atomic7-testing.repo
 yum --enablerepo=atomic7-testing -y install rpm-ostree-toolbox
 
 service firewalld stop
-service iptables stop
 
-## update script from git, commented out for now
-
-#test -d ${GitDir} || git clone https://github.com/CentOS/sig-atomic-buildscripts
-#cd ${GitDir}; git clean -dfx; git reset --hard origin/downstream; git pull -r
 
 ## backup the last built repo, commented out for now
 
@@ -57,15 +51,15 @@ service iptables stop
 #/bin/rsync -Ha --stats /srv/rolling/ /srv/rolling.${DateStamp} > ${LogFile} 2>&1
 #echo '----------' >> ${LogFile}
 
-## create repo in HomeDir, this will fail w/o issue if already exists
+## create repo in BuildDir, this will fail w/o issue if already exists
 
-if ! test -d ${HomeDir}/repo/objects; then
-    ostree --repo=${HomeDir}/repo init --mode=archive-z2
+if ! test -d ${BuildDir}/repo/objects; then
+    ostree --repo=${BuildDir}/repo init --mode=archive-z2
 fi
 
 ## compose a new tree, based on defs in centos-atomic-host.json
 
-rpm-ostree compose --repo=${HomeDir}/repo/ tree ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
+rpm-ostree compose --repo=${BuildDir}/repo/ tree ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
 
 ## tree-signing, commented out for now
 
@@ -90,16 +84,10 @@ systemctl start libvirtd
 ## This part creates an install tree and install iso 
 
 echo '---------- installer ' >> ${LogFile}
-rpm-ostree-toolbox installer --overwrite --ostreerepo ${HomeDir}/repo -c  ${GitDir}/config.ini -o ${BuildDir}/installer |& tee ${LogFile}
+rpm-ostree-toolbox installer --overwrite --ostreerepo ${BuildDir}/repo -c  ${GitDir}/config.ini -o ${BuildDir}/installer |& tee ${LogFile}
 
 # we likely need to push the installer content to somewhere the following kickstart
 #  can pick the content from ( does it otherwise work with a file:/// url ? unlikely )
-lsof -i :8000 > /dev/null 2>&1
-if [ $? -eq 0 ]; then
-  for pid in $(lsof -n -i :8000 | grep -v PID | awk '{print $2}' | sort -u); do
-    kill -9 $pid
-  done
-fi
 python -m SimpleHTTPServer 8000 &
 
 echo '---------- Vagrant ' >> ${LogFile}
@@ -109,8 +97,8 @@ rpm-ostree-toolbox imagefactory --overwrite --tdl ${GitDir}/atomic-7.1.tdl -c  $
 ## Make a place to copy finished images
 
 mkdir -p ${BuildDir}/images/
-cp -r ${BuildDir}/virt/* ${HomeDir}/images/
-cp ${BuildDir}/installer/images/images/installer.iso ${HomeDir}/images/centos-atomic-host-7.iso
+cp -r ${BuildDir}/virt/* ${BuildDir}/images/
+cp ${BuildDir}/builddir/installer/images/images/installer.iso ${BuildDir}/images/centos-atomic-host-7.iso
 rm -rf ${BuildDir}/virt
 
 # TODO we need a liveimage ks for this part
