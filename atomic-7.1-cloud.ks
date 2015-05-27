@@ -26,7 +26,7 @@ volgroup atomicos pv.01
 logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
 
 # Equivalent of %include fedora-repo.ks
-ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-host" --ref="centos-atomic-host/7/x86_64/standard" --url="http://BUILDHOST/repo/" --nogpg
+ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-host" --ref="centos-atomic-host/7/x86_64/standard" --url="http://192.168.122.1:8000/repo/" --nogpg
 
 reboot
 
