@@ -97,8 +97,8 @@ rpm-ostree-toolbox imagefactory --overwrite --tdl ${GitDir}/atomic-7.1.tdl -c  $
 ## Make a place to copy finished images
 
 mkdir -p ${BuildDir}/images/
-cp -r ${BuildDir}/virt/* ${BuildDir}/images/
-cp ${BuildDir}/builddir/installer/images/images/installer.iso ${BuildDir}/images/centos-atomic-host-7.iso
+cp -r ${BuildDir}/virt/images/* ${BuildDir}/images/
+cp ${BuildDir}/installer/images/images/installer.iso ${BuildDir}/images/centos-atomic-host-7.iso
 rm -rf ${BuildDir}/virt
 
 # TODO we need a liveimage ks for this part
