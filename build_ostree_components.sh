@@ -31,7 +31,7 @@ set -o pipefail
 
 ## update script from git, commented out for now
 cd ${BuildDir}
-git clone https://github.com/kbsingh/sig-atomic-buildscripts && cd sig-atomic-buildscripts && git checkout downstream
+git clone https://github.com/CentOS/sig-atomic-buildscripts && cd sig-atomic-buildscripts && git checkout downstream
 cd ${BuildDir}
 
 # Init, make sure we have the bits we need installed. 
@@ -97,8 +97,8 @@ rpm-ostree-toolbox imagefactory --overwrite --tdl ${GitDir}/atomic-7.1.tdl -c  $
 ## Make a place to copy finished images
 
 mkdir -p ${BuildDir}/images/
-cp -r ${BuildDir}/virt/* ${BuildDir}/images/
-cp ${BuildDir}/builddir/installer/images/images/installer.iso ${BuildDir}/images/centos-atomic-host-7.iso
+cp -r ${BuildDir}/virt/images/* ${BuildDir}/images/
+cp ${BuildDir}/installer/images/images/installer.iso ${BuildDir}/images/centos-atomic-host-7.iso
 rm -rf ${BuildDir}/virt
 
 # TODO we need a liveimage ks for this part
