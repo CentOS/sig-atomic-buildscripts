@@ -9,7 +9,8 @@
 
     "selinux": true,
 
-    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils"],
+    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
+                           "centos-release-atomic"],
 
     "install-langs": ["en_US"],
 
@@ -67,13 +68,16 @@
 		 "bind-utils",
 		 "authconfig",
 		 "policycoreutils-python",
-		 "docker-storage-setup",
+		 "cockpit-shell",
+		 "cockpit-bridge",
 		 "setools-console"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
 			     ["kernel", "/lib/modules/.*/drivers/gpu"],
 			     ["linux-firmware", "/usr/lib/firmware/radeon/.*"],
-			     ["filesystem", "/usr/share/backgrounds"]],
+			     ["filesystem", "/usr/share/backgrounds"],
+			     ["redhat-logos", "/usr/share/backgrounds", "/usr/share/kde4",
+			      "/usr/share/anaconda"]],
 
     "units": ["docker.service", "tuned.service", "docker-storage-setup.service"],
 
