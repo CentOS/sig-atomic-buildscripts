@@ -9,7 +9,8 @@
 
     "selinux": true,
 
-    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils"],
+    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils"
+                           "centos-release-atomic"],
 
     "install-langs": ["en_US"],
 
