@@ -1,11 +1,11 @@
 {
-    "comment": "CentOS adaptation of RHEL Atomic host",
+    "comment": "CentOS Atomic host, 4wk build",
 
     "osname": "centos-atomic-host",
     "ref": "centos-atomic-host/7/x86_64/standard",
 
     "repos": ["CentOS-Base", "CentOS-updates", "CentOS-extras",
-              "rhel-atomic-rebuild"],
+              "virt7-testing", "atomic7-testing"],
 
     "selinux": true,
 
