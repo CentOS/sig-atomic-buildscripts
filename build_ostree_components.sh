@@ -60,7 +60,7 @@ fi
 
 ## compose a new tree, based on defs in centos-atomic-host.json
 
-rpm-ostree compose --repo=${HomeDir}/repo/ tree --add-metadata-string=version=${VERSION} ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
+rpm-ostree compose --repo=${OstreeRepoDir} tree --add-metadata-string=version=${VERSION} ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
 
 ## tree-signing, commented out for now
 
