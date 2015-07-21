@@ -106,7 +106,7 @@ rm -rf ${BuildDir}/virt
 
 #echo '---------- liveimage ' >> ${LogFile}
 #rpm-ostree-toolbox liveimage -c  ${GitDir}/config.ini -o pxe-to-live >> ${LogFile} 2>&1
-echo '----------' >> ${LogFile}
+#echo '----------' >> ${LogFile}
 
 #/bin/rsync -PHvar ${BuildDir} pushhost::c7-atomic/x86_64/Builds/ >> ${LogFile}  2>&1
 
