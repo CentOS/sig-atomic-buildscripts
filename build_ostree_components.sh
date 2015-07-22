@@ -110,3 +110,7 @@ rm -rf ${BuildDir}/virt
 
 #/bin/rsync -PHvar ${BuildDir} pushhost::c7-atomic/x86_64/Builds/ >> ${LogFile}  2>&1
 
+## kill the last background job, to shut off the python simpleserver
+kill $!
+
+
