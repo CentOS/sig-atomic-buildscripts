@@ -5,15 +5,15 @@ timezone --utc Etc/UTC
 
 auth --useshadow --enablemd5
 selinux --enforcing
-rootpw --lock --iscrypted locked
-user --name=none
+rootpw vagrant
+user --name=vagrant --password=vagrant
 
 firewall --disabled
 
 bootloader --timeout=1 --append="no_timer_check console=tty1 console=ttyS0,115200n8"
 
 network --bootproto=dhcp --device=eth0 --activate --onboot=on
-services --enabled=sshd,rsyslog,cloud-init,cloud-init-local,cloud-config,cloud-final
+services --disabled=cloud-init,cloud-init-local,cloud-config,cloud-final
 # We use NetworkManager, and Avahi doesn't make much sense in the cloud
 services --disabled=network,avahi-daemon
 
@@ -25,23 +25,26 @@ part pv.01 --grow
 volgroup atomicos pv.01
 logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
 
-# Equivalent of %include fedora-repo.ks
-ostreesetup --osname="centos" --remote="installmedia" --ref="centos/7/atomic/x86_64/cloud-docker-host" --url="http://buildlogs.centos.org/centos/7/atomic/x86_64/repo/" --nogpg
+ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-host" --ref="centos-atomic-host/7/x86_64/standard" --url="http://192.168.122.1:8000/repo/" --nogpg
 
 reboot
 
 %post --erroronfail
 
-# Due to an anaconda bug (https://github.com/projectatomic/rpm-ostree/issues/42)
-# we need to install the repo here.
-ostree remote delete centos-atomic-host
-ostree remote add --set=gpg-verify=false centos-atomic-host 'http://buildlogs.centos.org/centos/7/atomic/x86_64/repo'
+# For RHEL, it doesn't make sense to have a default remote configuration,
+# because you need to use subscription manager.
+#rm /etc/ostree/remotes.d/@OSTREE_OSNAME@.conf
+#echo 'unconfigured-state=This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.' >> $(ostree admin --print-current-dir).origin
+
+# Anaconda is writing a /etc/resolv.conf from the generating environment.
+# The system should start out with an empty file.
+truncate -s 0 /etc/resolv.conf
 
 # older versions of livecd-tools do not follow "rootpw --lock" line above
 # https://bugzilla.redhat.com/show_bug.cgi?id=964299
-passwd -l root
+#passwd -l root
 # remove the user anaconda forces us to make
-userdel -r none
+#userdel -r none
 
 # If you want to remove rsyslog and just use journald, remove this!
 echo -n "Disabling persistent journal"
@@ -103,6 +106,25 @@ rpm -qa
 echo "-----------------------------------------------------------------------"
 # Note that running rpm recreates the rpm db files which aren't needed/wanted
 rm -f /var/lib/rpm/__db*
+
+%end
+
+%post --erroronfail
+
+# Work around cloud-init being both disabled and enabled; need
+# to refactor to a common base.
+rm /etc/systemd/system/multi-user.target.wants/{cloud-config.service,cloud-final.service,cloud-init-local.service,cloud-init.service}
+
+# Vagrant setup
+sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
+echo 'vagrant ALL=NOPASSWD: ALL' > /etc/sudoers.d/vagrant-nopasswd
+sed -i 's/.*UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
+mkdir -m 0700 -p ~vagrant/.ssh
+cat > ~vagrant/.ssh/authorized_keys << EOKEYS
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key
+EOKEYS
+chmod 600 ~vagrant/.ssh/authorized_keys
+chown -R vagrant:vagrant ~vagrant/.ssh/
 
 %end
 
