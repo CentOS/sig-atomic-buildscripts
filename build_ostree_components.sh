@@ -82,6 +82,18 @@ rpm-ostree compose --repo=${OstreeRepoDir} tree --add-metadata-string=version=${
 systemctl start docker
 systemctl start libvirtd
 
+## The next step requires pkgs from rhel-atomic-rebuild to complete,
+## but newer pkgs from the atomic7-testing repo will superceed these,
+## if present. The rpm-ostree-toolbox command attemps to pull in any
+## repos present in the dir, and appears not to respect any exclude
+## arguments in the repo files, so we need to remove the atomic7-testing
+## repo file, and remove the reference to it in the json for the build 
+## process to complete.
+
+rm ${GitDir}/atomic7-testing.repo
+sed -e s/\,\ \"atomic7\-testing\"//g -i ${GitDir}/centos-atomic-host.json
+
+
 ## This part creates an install tree and install iso 
 
 echo '---------- installer ' >> ${LogFile}
