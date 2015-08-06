@@ -1,16 +1,15 @@
 {
-    "comment": "CentOS adaptation of RHEL Atomic host",
+    "comment": "CentOS Atomic host, 4wk build",
 
     "osname": "centos-atomic-host",
     "ref": "centos-atomic-host/7/x86_64/standard",
 
     "repos": ["CentOS-Base", "CentOS-updates", "CentOS-extras",
-              "rhel-atomic-rebuild"],
+              "virt7-docker-common-testing", "atomic7-testing"],
 
     "selinux": true,
 
-    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
-                           "centos-release-atomic"],
+    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils"],
 
     "install-langs": ["en_US"],
 
@@ -28,7 +27,7 @@
     "check-groups": { "type": "file", "filename": "group" },
 
     "packages": ["atomic",
-		 "systemd", "kernel", "rpm-ostree-client",
+		 "systemd", "kernel", "rpm-ostree",
 		 "dracut-network",
 		 "biosdevname",
 		 "coreutils",

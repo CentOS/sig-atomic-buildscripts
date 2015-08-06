@@ -14,7 +14,7 @@
 ## atomic-7.1-cloud.ks and atomic-7.1-vagrant.ks must point to
 ## the desired ostree repo in line beginning w/ "ostreesetup"
 
-VERSION=7.$( date  +%Y%m%d )
+VERSION=7.$( date  +%Y%m%d )-devel
 
 DateStamp=$( date  +%Y%m%d_%H%M%S )
 BuildDir=$1
@@ -32,7 +32,7 @@ set -o pipefail
 
 ## update script from git, commented out for now
 cd ${BuildDir}
-git clone https://github.com/CentOS/sig-atomic-buildscripts && cd sig-atomic-buildscripts && git checkout downstream
+git clone https://github.com/CentOS/sig-atomic-buildscripts && cd sig-atomic-buildscripts && git checkout devel
 cd ${BuildDir}
 
 # Init, make sure we have the bits we need installed. 
@@ -81,6 +81,18 @@ rpm-ostree compose --repo=${OstreeRepoDir} tree --add-metadata-string=version=${
 
 systemctl start docker
 systemctl start libvirtd
+
+## The next step requires pkgs from rhel-atomic-rebuild to complete,
+## but newer pkgs from the atomic7-testing repo will superceed these,
+## if present. The rpm-ostree-toolbox command attemps to pull in any
+## repos present in the dir, and appears not to respect any exclude
+## arguments in the repo files, so we need to remove the atomic7-testing
+## repo file, and remove the reference to it in the json for the build 
+## process to complete.
+
+rm ${GitDir}/atomic7-testing.repo
+sed -e s/\,\ \"atomic7\-testing\"//g -i ${GitDir}/centos-atomic-host.json
+
 
 ## This part creates an install tree and install iso 
 
