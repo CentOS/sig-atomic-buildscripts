@@ -58,6 +58,10 @@ if ! test -d ${BuildDir}/repo/objects; then
     ostree --repo=${BuildDir}/repo init --mode=archive-z2
 fi
 
+# sync repo from ds location
+
+ostree remote add --repo=/srv/repo centos --set=gpg-verify=false http://mirror.centos.org/centos/7/atomic/x86_64/repo && ostree pull --repo=/srv/repo --mirror centos centos-atomic-host/7/x86_64/standard
+
 ## compose a new tree, based on defs in centos-atomic-host.json
 
 rpm-ostree compose --repo=${OstreeRepoDir} tree --add-metadata-string=version=${VERSION} ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
