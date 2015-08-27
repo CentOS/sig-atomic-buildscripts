@@ -60,7 +60,7 @@ fi
 
 # sync repo from ds location
 
-ostree remote add --repo=/srv/repo ostree-mirror --set=gpg-verify=false http://mirror.centos.org/centos/7/atomic/x86_64/repo && ostree pull --repo=/srv/repo --mirror ostree-mirror centos-atomic-host/7/x86_64/standard
+# ostree remote add --repo=/srv/repo ostree-mirror --set=gpg-verify=false http://mirror.centos.org/centos/7/atomic/x86_64/repo && ostree pull --repo=/srv/repo --mirror ostree-mirror centos-atomic-host/7/x86_64/standard
 
 ## compose a new tree, based on defs in centos-atomic-host.json
 
