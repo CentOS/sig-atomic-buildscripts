@@ -66,6 +66,10 @@ ostree remote add --repo=/srv/repo centos-atomic-host --set=gpg-verify=false htt
 
 rpm-ostree compose --repo=${OstreeRepoDir} tree --add-metadata-string=version=${VERSION} ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
 
+# deal with https://bugzilla.gnome.org/show_bug.cgi?id=748959
+
+chmod -R a+r /srv/repo/objects
+
 ## tree-signing, commented out for now
 
 #if [ $? -eq '0' ]; then
