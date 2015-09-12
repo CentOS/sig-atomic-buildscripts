@@ -1,0 +1,4 @@
+[virt7-docker-common-candidate]
+name=virt7-docker-common-candidate
+baseurl=http://cbs.centos.org/repos/virt7-docker-common-candidate/x86_64/os/
+gpgcheck=0
