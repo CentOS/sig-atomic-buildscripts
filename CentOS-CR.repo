@@ -20,7 +20,7 @@
 #       line in the repo config below.
 #
 
-[cr]
+[CentOS-CR]
 name=CentOS-7 - cr
 baseurl=http://mirror.centos.org/centos/7/cr/$basearch/
 gpgcheck=1
