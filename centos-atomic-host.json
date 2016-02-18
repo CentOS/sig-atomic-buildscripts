@@ -70,6 +70,8 @@
 		 "policycoreutils-python",
 		 "cockpit-shell",
 		 "cockpit-bridge",
+                 "cockpit-docker",
+                 "cockpit-ostree",
 		 "setools-console",
                  "stub-redhat-lsb-core-only-for-ceph",
                  "ceph-common", "device-mapper-multipath",
