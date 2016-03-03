@@ -9,5 +9,5 @@ if [ $? -ne 0 ]; then
   service libvirtd start
 fi
 
-chmod u+x vagrant-test.sh
-scl enable sclo-vagrant1 vagrant-test.sh
+chmod u+x tests/vagrant-test.sh
+scl enable sclo-vagrant1 ./tests/vagrant-test.sh

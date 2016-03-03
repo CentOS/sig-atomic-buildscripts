@@ -8,7 +8,7 @@ if [ $? -ne 0 ]; then
   echo 'XX: FAIL: vagrant filed to bring up box'
   exit 1
 fi
-vagrant ssh -c "docker run centos"
+vagrant ssh -c "sudo docker run centos"
 if [ $? -ne 0 ]; then
   echo 'XX: FAIL: atomic host box failed to run centos container'
   exit 1
