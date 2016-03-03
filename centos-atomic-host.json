@@ -5,7 +5,8 @@
     "ref": "centos-atomic-host/7/x86_64/standard",
 
     "repos": ["CentOS-Base", "CentOS-updates", "CentOS-extras",
-              "virt7-docker-common-candidate", "atomic7-testing"],
+              "virt7-docker-common-candidate", "atomic7-testing",
+              "rhel-atomic-rebuild", "CentOS-CR"],
 
     "selinux": true,
 
@@ -37,7 +38,6 @@
 		 "e2fsprogs", "xfsprogs",
 		 "mdadm",
 		 "docker",
-		 "docker-python",
 		 "selinux-policy-targeted",
 		 "sssd",
 		 "cloud-init",
@@ -55,6 +55,7 @@
 		 "chrony",
 		 "logrotate",
 		 "passwd",
+                 "iptables-services",
 		 "NetworkManager", "vim-minimal", "nano",
 		 "sudo",
 		 "tuned", "tuned-profiles-atomic",
@@ -69,7 +70,12 @@
 		 "policycoreutils-python",
 		 "cockpit-shell",
 		 "cockpit-bridge",
-		 "setools-console"],
+                 "cockpit-docker",
+                 "cockpit-ostree",
+		 "setools-console",
+                 "stub-redhat-lsb-core-only-for-ceph",
+                 "ceph-common", "device-mapper-multipath",
+                 "sg3_utils", "glusterfs-fuse"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
 			     ["kernel", "/lib/modules/.*/drivers/gpu"],
