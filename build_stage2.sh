@@ -21,7 +21,6 @@ cd ${BuildDir}
 systemctl start docker
 systemctl start libvirtd
 
-<<<<<<< HEAD
 ## The next step requires pkgs from rhel-atomic-rebuild to complete,
 ## but newer pkgs from the atomic7-testing repo will superceed these,
 ## if present. The rpm-ostree-toolbox command attemps to pull in any
@@ -33,8 +32,6 @@ systemctl start libvirtd
 rm ${GitDir}/atomic7-testing.repo
 sed -e s/\,\ \"atomic7\-testing\"//g -i ${GitDir}/centos-atomic-host.json
 
-=======
->>>>>>> a2dccaa... sync changes from downstream branch
 ## This part creates an install tree and install iso 
 
 echo '---------- installer ' >> ${LogFile}
