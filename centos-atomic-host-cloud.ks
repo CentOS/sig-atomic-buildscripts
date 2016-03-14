@@ -29,19 +29,18 @@ ostreesetup --osname="centos" --remote="installmedia" --ref="centos/7/atomic/x86
 reboot
 
 %post --erroronfail
-# Default storage for Atomic
-if [ -b /dev/mapper/atomicos-root ]; then
-  lvcreate -l 8%FREE -n docker-meta atomicos
-  lvcreate -l 100%FREE -n docker-data atomicos
 
-  cat <<EOF >> /etc/sysconfig/docker-storage
+### CentOS modification ###
+# We drop the part from upstream that sets unconfigured-state
+### CentOS modification ###
 
-# Added by Anaconda Atomic post script
+# Configure docker-storage-setup to resize the partition table on boot
+# https://github.com/projectatomic/docker-storage-setup/pull/25
+echo 'GROWPART=true' > /etc/sysconfig/docker-storage-setup
 
-DOCKER_STORAGE_OPTIONS=--storage-opt dm.fs=xfs --storage-opt dm.datadev=/dev/mapper/atomicos-docker--data --storage-opt dm.metadatadev=/dev/mapper/atomicos-docker--meta
-
-EOF
-fi
+# Anaconda is writing a /etc/resolv.conf from the generating environment.
+# The system should start out with an empty file.
+truncate -s 0 /etc/resolv.conf
 
 # older versions of livecd-tools do not follow "rootpw --lock" line above
 # https://bugzilla.redhat.com/show_bug.cgi?id=964299
