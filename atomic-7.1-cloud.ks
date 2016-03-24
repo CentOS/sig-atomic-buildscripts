@@ -37,6 +37,10 @@ reboot
 #rm /etc/ostree/remotes.d/*.conf
 #echo 'unconfigured-state=This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.' >> $(ostree admin --print-current-dir).origin
 
+# Configure docker-storage-setup to resize the partition table on boot
+# https://github.com/projectatomic/docker-storage-setup/pull/25
+echo 'GROWPART=true' > /etc/sysconfig/docker-storage-setup
+
 # Anaconda is writing a /etc/resolv.conf from the generating environment.
 # The system should start out with an empty file.
 truncate -s 0 /etc/resolv.conf
