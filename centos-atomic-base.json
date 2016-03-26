@@ -5,7 +5,7 @@
     "ref": "centos/7/atomic/x86_64/base",
     
     "repos": ["CentOS-Base", "CentOS-updates", "CentOS-extras",
-              "atomic7-testing", "virt7-testing"],
+              "atomic7-testing"],
 
     "selinux": true,
 
