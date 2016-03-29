@@ -36,6 +36,9 @@ reboot
 #rm /etc/ostree/remotes.d/@OSTREE_OSNAME@.conf
 #echo 'unconfigured-state=This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.' >> $(ostree admin --print-current-dir).origin
 
+# Work around https://bugzilla.redhat.com/show_bug.cgi?id=1276775
+chmod 01777 /sysroot/tmp
+
 # Anaconda is writing a /etc/resolv.conf from the generating environment.
 # The system should start out with an empty file.
 truncate -s 0 /etc/resolv.conf
