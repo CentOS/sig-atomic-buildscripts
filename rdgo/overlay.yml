@@ -1,0 +1,79 @@
+# This manifest file defines a set of RPMs that are in turn
+# used for downstream content (Docker images, rpm-ostree commits),
+# but can also be used directly by yum.
+
+# Broadly speaking, dependencies are pulled from Fedora 23, and we
+# track git master for things we are actively developing.
+
+aliases: 
+  - name: github
+    url: https://github.com/
+    cacertpath: DigiCertSHA2ExtendedValidationServerCA.pem
+
+  - name: fedorapkgs
+    url: https://pkgs.fedoraproject.org/git/rpms/
+    # Note this is actually not in ca-certificates.
+    cacertpath: FedoraProjectCA.pem
+
+  - name: gnome
+    url: https://git.gnome.org/browse/
+    cacertpath: StartComClass2PrimaryIntermediateServerCA.pem
+
+distgit:
+  prefix: fedorapkgs
+  branch: f23
+  
+root:
+  mock: centos-7-and-extras-$arch.cfg
+
+cache:
+  buildserial: 0
+
+components:
+  - src: distgit
+    distgit:
+      name: python-docker-py
+      src: file:///home/walters/src/distgit/fedora/python-docker-py
+
+  - src: github:projectatomic/atomic
+    distgit:
+      src: file:///home/walters/src/distgit/fedora/atomic
+      branch: master
+
+  - src: github:coreos/etcd
+    freeze: 5e6eb7e19d6385adfabb1f1caea03e732f9348ad
+    distgit:
+      src: file:///home/walters/src/distgit/fedora/etcd
+      branch: master
+      patches: drop
+
+  - src: gnome:libgsystem
+    distgit: 
+      patches: drop
+
+  - src: distgit
+    distgit:
+      name: gtk-doc
+
+  - src: distgit
+    distgit:
+      name: glib2
+
+  - src: github:ostreedev/ostree
+    distgit:
+      branch: master
+      patches: drop
+
+  - src: distgit
+    distgit:
+      name: libsolv
+
+  - src: github:Tojaj/librepo
+
+  - src: github:rpm-software-management/libhif
+    spec: internal
+
+  - src: github:projectatomic/rpm-ostree
+    distgit:
+      branch: f23
+      patches: drop
