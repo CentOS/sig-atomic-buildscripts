@@ -30,50 +30,38 @@ cache:
   buildserial: 0
 
 components:
-  - src: distgit
-    distgit:
-      name: python-docker-py
-      src: file:///home/walters/src/distgit/fedora/python-docker-py
+  - distgit: python-docker-py
 
   - src: github:projectatomic/atomic
     distgit:
-      src: file:///home/walters/src/distgit/fedora/atomic
       branch: master
 
-  - src: github:coreos/etcd
-    freeze: 5e6eb7e19d6385adfabb1f1caea03e732f9348ad
-    distgit:
-      src: file:///home/walters/src/distgit/fedora/etcd
-      branch: master
-      patches: drop
+  - distgit: etcd
 
   - src: gnome:libgsystem
     distgit: 
       patches: drop
 
-  - src: distgit
-    distgit:
-      name: gtk-doc
+  - distgit: gtk-doc
 
-  - src: distgit
-    distgit:
-      name: glib2
+  - distgit: glib2
 
   - src: github:ostreedev/ostree
     distgit:
       branch: master
       patches: drop
 
-  - src: distgit
-    distgit:
-      name: libsolv
-
+  # Maybe in the future track libsolv git master, but it's not something
+  # we actively hack on
+  - distgit: libsolv
+    
+  # In contrast I want to land a lot of features in librepo
   - src: github:Tojaj/librepo
 
+  # rpm-ostree always needs bleeding edge libhif
   - src: github:rpm-software-management/libhif
     spec: internal
 
   - src: github:projectatomic/rpm-ostree
     distgit:
-      branch: f23
       patches: drop
