@@ -3,6 +3,8 @@
 
 %include centos-atomic-host-7.ks
 
+bootloader --append="no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0" --location=mbr --timeout=1
+
 services --disabled=cloud-init,cloud-init-local,cloud-config,cloud-final
 
 user --name=vagrant --password=vagrant
@@ -14,7 +16,7 @@ user --name=vagrant --password=vagrant
 rm /etc/systemd/system/multi-user.target.wants/cloud-init* /etc/systemd/system/multi-user.target.wants/cloud-config*
 
 # Vagrant setup
-sed -i 's,Defaults\\s*requiretty,Defaults !requiretty,' /etc/sudoers
+sed -i 's/Defaults\s*requiretty/Defaults !requiretty/' /etc/sudoers
 echo 'vagrant ALL=NOPASSWD: ALL' > /etc/sudoers.d/vagrant-nopasswd
 sed -i 's/.*UseDNS.*/UseDNS no/' /etc/ssh/sshd_config
 mkdir -m 0700 -p ~vagrant/.ssh
