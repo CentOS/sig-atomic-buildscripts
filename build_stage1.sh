@@ -16,6 +16,10 @@
 
 VERSION=7.$( date  +%Y%m%d )-devel
 
+## make treefile configurable
+
+TreeFile="${TreeFile:-centos-atomic-host.json}"
+
 DateStamp=$( date  +%Y%m%d_%H%M%S )
 BuildDir=$1
 LogFile=${BuildDir}/log
@@ -64,7 +68,7 @@ ostree remote add --repo=/srv/repo centos-atomic-host --set=gpg-verify=false htt
 
 ## compose a new tree, based on defs in centos-atomic-host.json
 
-rpm-ostree compose --repo=${OstreeRepoDir} tree --add-metadata-string=version=${VERSION} ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
+rpm-ostree compose --repo=${OstreeRepoDir} tree --add-metadata-string=version=${VERSION} ${GitDir}/${TreeFile} |& tee ${BuildDir}/log.compose
 ostree --repo=${OstreeRepoDir} summary -u |& tee ${BuildDir}/log.compose
 
 # deal with https://bugzilla.gnome.org/show_bug.cgi?id=748959
