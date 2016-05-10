@@ -1,0 +1,67 @@
+# This manifest file defines a set of RPMs that are in turn
+# used for downstream content (Docker images, rpm-ostree commits),
+# but can also be used directly by yum.
+
+# Broadly speaking, dependencies are pulled from Fedora 23, and we
+# track git master for things we are actively developing.
+
+aliases: 
+  - name: github
+    url: https://github.com/
+    cacertpath: DigiCertSHA2ExtendedValidationServerCA.pem
+
+  - name: fedorapkgs
+    url: https://pkgs.fedoraproject.org/git/rpms/
+    # Note this is actually not in ca-certificates.
+    cacertpath: FedoraProjectCA.pem
+
+  - name: gnome
+    url: https://git.gnome.org/browse/
+    cacertpath: StartComClass2PrimaryIntermediateServerCA.pem
+
+distgit:
+  prefix: fedorapkgs
+  branch: f23
+  
+root:
+  mock: centos-7-and-extras-$arch.cfg
+
+cache:
+  buildserial: 0
+
+components:
+  - distgit: python-docker-py
+
+  - src: github:projectatomic/atomic
+    distgit:
+      branch: master
+
+  - distgit: etcd
+
+  - src: gnome:libgsystem
+    distgit: 
+      patches: drop
+
+  - distgit: gtk-doc
+
+  - distgit: glib2
+
+  - src: github:ostreedev/ostree
+    distgit:
+      branch: master
+      patches: drop
+
+  # Maybe in the future track libsolv git master, but it's not something
+  # we actively hack on
+  - distgit: libsolv
+    
+  # In contrast I want to land a lot of features in librepo
+  - src: github:Tojaj/librepo
+
+  # rpm-ostree always needs bleeding edge libhif
+  - src: github:rpm-software-management/libhif
+    spec: internal
+
+  - src: github:projectatomic/rpm-ostree
+    distgit:
+      patches: drop
