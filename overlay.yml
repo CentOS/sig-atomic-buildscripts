@@ -8,16 +8,16 @@
 aliases: 
   - name: github
     url: https://github.com/
-    cacertpath: DigiCertSHA2ExtendedValidationServerCA.pem
+    cacertpath: certs/DigiCertSHA2ExtendedValidationServerCA.pem
 
   - name: fedorapkgs
     url: https://pkgs.fedoraproject.org/git/rpms/
     # Note this is actually not in ca-certificates.
-    cacertpath: FedoraProjectCA.pem
+    cacertpath: certs/FedoraProjectCA.pem
 
   - name: gnome
     url: https://git.gnome.org/browse/
-    cacertpath: StartComClass2PrimaryIntermediateServerCA.pem
+    cacertpath: certs/StartComClass2PrimaryIntermediateServerCA.pem
 
 distgit:
   prefix: fedorapkgs
@@ -30,9 +30,34 @@ cache:
   buildserial: 0
 
 components:
-  - distgit: python-docker-py
+  - src: github:projectatomic/bubblewrap
+    spec: internal
+
+  - src: github:projectatomic/atomic-devmode
+
+  - src: github:projectatomic/commissaire
+    spec: internal
+
+  - src: distgit
+    distgit:
+      name: python-ipaddress
+      branch: master
+
+  - src: distgit
+    distgit:
+      name: python-docker-py
+      branch: f24
+
+  - distgit: go-srpm-macros
+
+  - distgit: go-compilers
 
   - src: github:projectatomic/atomic
+    distgit:
+      branch: master
+
+  - src: github:projectatomic/skopeo
+    freeze: 026acb2a5726d6b4994ce0dfff34ccb9367b9d77
     distgit:
       branch: master
 
@@ -64,4 +89,5 @@ components:
 
   - src: github:projectatomic/rpm-ostree
     distgit:
+      branch: master
       patches: drop

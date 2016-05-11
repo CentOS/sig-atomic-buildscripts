@@ -1,0 +1,14 @@
+- name: Determine if we have EPEL 7
+  command: "/bin/sh -c 'test -f /etc/yum.repos.d/epel.repo || test -f /etc/yum.repos.d/epel7.repo'"
+  ignore_errors: True
+  register: have_epel7
+  changed_when: False
+
+- name: copy EPEL 7 rpm
+  action: copy src=epel-release-7-2.noarch.rpm
+          dest=/root/epel-release.rpm
+          owner=root group=root
+  when: have_epel7.rc != 0
+
+- yum: name=/root/epel-release.rpm state=present
+  when: have_epel7.rc != 0

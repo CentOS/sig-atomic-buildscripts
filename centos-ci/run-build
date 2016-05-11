@@ -1,0 +1,55 @@
+#!/bin/bash
+set -xeuo pipefail
+
+origdir=$1
+buildscriptsdir=../sig-atomic-buildscripts
+tempdir=$(mktemp -d "stamp.XXXXXX")
+touch ${tempdir}/.testtmp
+function cleanup () {
+    if test -n "${TEST_SKIP_CLEANUP:-}"; then
+	echo "Skipping cleanup of ${tempdir}"
+    else if test -f ${tempdir}/.testtmp; then
+	rm "${tempdir}" -rf
+    fi
+    fi
+}
+trap cleanup EXIT
+
+ln -sf ${buildscriptsdir}/overlay.yml .
+if ! test -d src; then
+    rpmdistro-gitoverlay init
+fi    
+
+# Create this now so it always exists for Jenkins
+mkdir -p ${origdir}/build-logs
+
+# Delete files accidentally created in builddir
+rm -f fetch.stap build.stamp treecompose.stamp
+
+# Git fetch all the things
+rpmdistro-gitoverlay resolve --fetch-all --touch-if-changed ${tempdir}/fetch.stamp
+
+# Do an RPM build if something changed
+if test -f ${tempdir}/fetch.stamp; then
+    build_success=false
+    if rpmdistro-gitoverlay build --touch-if-changed ${tempdir}/build.stamp --logdir=${origdir}/build-logs; then
+	build_success=true
+    fi
+fi
+
+if ! test -d ostree/repo/objects; then
+    mkdir -p ostree/repo
+    ostree --repo=ostree/repo init --mode=archive-z2
+fi
+
+treefile=centos-atomic-host-continuous.json
+sed -i -e 's,^baseurl=.*,baseurl=file://'$(pwd)/build',' ${buildscriptsdir}/atomic-centos-continuous.repo
+sudo rpm-ostree compose tree --touch-if-changed=${tempdir}/treecompose.stamp --repo=ostree/repo ${buildscriptsdir}/${treefile}
+if test -f ${tempdir}/treecompose.stamp; then
+    sudo chown -R -h $USER:$USER ostree/repo
+    ostree --repo=ostree/repo summary -u
+    rpm-ostree db --repo=ostree/repo diff centos-atomic-host/7/x86_64/devel/continuous{^,}
+    ostree --repo=ostree/repo static-delta generate centos-atomic-host/7/x86_64/devel/continuous
+    ostree --repo=ostree/repo prune --keep-younger-than='30 days ago'
+    ostree --repo=ostree/repo summary -u
+fi
