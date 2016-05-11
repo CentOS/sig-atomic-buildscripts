@@ -1,0 +1,23 @@
+#!/bin/bash
+set -xeuo pipefail
+
+basedir=$(cd $(dirname $0) && pwd)
+
+. ~/rsync-password.sh 
+
+build=centos-continuous
+
+rsync -q --stats -av sig-atomic@artifacts.ci.centos.org::sig-atomic/rdgo/${build} .
+origdir=$(pwd)
+cd ${build}
+
+build_success=false
+if ${basedir}/run-build ${origdir}; then
+    build_success=true
+fi
+
+cd ..
+rsync -q --stats -av --delete ${build}/ sig-atomic@artifacts.ci.centos.org::sig-atomic/rdgo/${build}/
+if test "${build_success}" = false; then
+    echo "Build failed, see logs above"; exit 1
+fi

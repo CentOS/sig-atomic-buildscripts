@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+
+import json, urllib, subprocess, sys, os
+    
+url_base="http://admin.ci.centos.org:8080"
+api_key=open(os.path.expanduser('~/duffy.key')).read().strip()
+
+ver="7"
+arch="x86_64"
+count=1
+
+get_nodes_url="%s/Node/get?key=%s&ver=%s&arch=%s&count=%s" % (url_base,api_key,ver,arch,count)
+
+b=json.load(urllib.urlopen(get_nodes_url))
+hosts=b['hosts']
+ssid=b['ssid']
+print "Provisioned {} hosts with DUFFY_SSID={}".format(len(hosts), ssid)
+with open('job.props', 'w') as f:
+    f.write('DUFFY_SSID={}\n'.format(ssid))
+    f.write('RSYNC_PASSWORD={}\n'.format(ssid[:13]))
+with open('inventory', 'w') as f:
+    f.write('[all]\n')
+    for host in hosts:
+        f.write(host + '\n')
+        print 'Host: {}'.format(host)
+

@@ -1,0 +1,81 @@
+- job:
+    name: atomic-rdgo-centos7
+    node: atomic-sig-ci-slave01 
+    description: |
+        This job tracks Project Atomic git upstream and generates RPM content
+        for CentOS 7.  The results are stored in <a href="https://ci.centos.org/artifacts/sig-atomic/rdgo/centos-continuous/">CentOS CI Artifacts</a><br>
+        rpm-md repo configuration:
+        <pre>
+        [atomic-centos-continuous]
+        baseurl=https://ci.centos.org/artifacts/sig-atomic/rdgo/centos-continuous/build
+        gpgcheck=0
+        </pre>
+        JJB Code Location: <a href="https://github.com/CentOS/sig-atomic-buildscripts">https://github.com/CentOS/sig-atomic-buildscripts</a><br>
+        Managed by Jenkins Job Builder. Do not edit via web.<br>
+    scm:
+      - git:
+          url: "https://github.com/CentOS/sig-atomic-buildscripts"
+          basedir: sig-atomic-buildscripts
+    triggers:
+      - github
+      - timed: "H/30 * * * *"
+
+    wrappers:
+      - workspace-cleanup
+    builders:
+      - inject:
+          properties-content: ANSIBLE_HOST_KEY_CHECKING=False
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+          exec sig-atomic-buildscripts/centos-ci/duffy-provision
+      - inject:
+          properties-file: job.props
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+
+          cleanup() {
+            $WORKSPACE/sig-atomic-buildscripts/centos-ci/duffy-teardown
+          }
+          trap cleanup EXIT
+
+          ssh-keygen -t ed25519 -P '' -f builder.key
+          cd sig-atomic-buildscripts/centos-ci/setup
+          ansible-playbook -v -i $WORKSPACE/inventory -u root setup-system.yml
+          cd $WORKSPACE
+
+          (echo -n "export RSYNC_PASSWORD=" && cat ~/duffy.key | cut -c '-13') > rsync-password.sh
+
+          # From here on out we assume only one node, so we can get interactive
+          # progress in the Jenkins log
+          node=$(grep ci.centos.org inventory | head -1)
+          rsync -q -Hrlptv --stats -e "ssh -i ${WORKSPACE}/builder.key" sig-atomic-buildscripts rsync-password.sh builder@${node}:
+          build_success=true
+          if ! ssh -tt -i ${WORKSPACE}/builder.key builder@${node} ./sig-atomic-buildscripts/centos-ci/run-build-and-rsync; then
+            build_success=false
+          fi
+          rsync -q -Hrlptv --stats -e "ssh -i ${WORKSPACE}/builder.key" builder@${node}:build-logs $WORKSPACE/build-logs || true
+          # Exit with code from the build
+          if test "${build_success}" = "false"; then
+            echo 'Build failed, see logs above'; exit 1
+          fi
+            
+    publishers:
+      - archive:
+          artifacts: 'build-logs/**'
+          allow-empty: 'true'
+
+      - postbuildscript:
+          script-only-if-succeeded: false
+          builders:
+            - shell: |
+                #!/bin/bash
+                set -xeuo pipefail
+                exec sig-atomic-buildscripts/centos-ci/duffy-teardown
+
+# create the jobs using the job templates
+- project:
+    name: atomic-rdgo
+    jobs:
+      - atomic-rdgo-centos7

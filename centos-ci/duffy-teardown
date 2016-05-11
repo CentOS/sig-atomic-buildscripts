@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+
+import os
+import urllib
+
+url_base="http://admin.ci.centos.org:8080"
+api_key=open(os.path.expanduser('~/duffy.key')).read().strip()
+ssid = os.environ['DUFFY_SSID']
+
+print "Tearing down SSID" + ssid
+done_nodes_url="%s/Node/done?key=%s&ssid=%s" % (url_base, api_key, ssid)
+urllib.urlopen(done_nodes_url)
+print "Teardown complete"
+
