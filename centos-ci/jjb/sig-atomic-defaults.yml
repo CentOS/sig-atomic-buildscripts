@@ -1,0 +1,22 @@
+- defaults:
+    name: atomic-defaults
+    node: atomic-sig-ci-slave01 
+    quiet-period: 0
+    wrappers:
+      - ansicolor
+      - workspace-cleanup
+      - timestamps
+
+- scm:
+    name: atomic-scms
+    scm:
+      - git:
+          url: "https://github.com/cgwalters/centos-ci-skeleton"
+          basedir: cciskel
+      - git:
+          url: "https://github.com/cgwalters/sig-atomic-buildscripts"
+          basedir: sig-atomic-buildscripts
+          branches:
+            - pr-testing
+
+      

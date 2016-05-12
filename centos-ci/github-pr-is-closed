@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+# If a PR is not open, create a stamp file.
+
+from __future__ import print_function
+
+import os
+import re
+import sys
+import json
+import requests
+import argparse
+
+parser = argparse.ArgumentParser(description="Determine if a github PR is closed")
+parser.add_argument('PR', action='store',
+                    help='Pull request number')
+parser.add_argument('stamp', action='store',
+                    help='Stamp file to create if the PR is closed')
+opts = parser.parse_args()
+
+r=re.compile('^pr/([0-9]+)')
+m = r.match(opts.PR)
+if m is None:
+   print("Not a PR: {}".format(opts.PR))
+   sys.exit(0)
+
+PR = int(m.group(1))
+		
+github_url = 'https://github.com/'
+giturl = os.environ['GIT_URL']
+if not giturl.startswith(github_url):
+   print("Triggered for non-github repo: {}".format(giturl))
+   sys.exit(0)
+gh_repo = giturl[len(github_url):]
+
+api_url = ("https://api.github.com/repos/%s/pulls/%d" % (gh_repo, PR))
+token = open(os.path.expanduser('~/github-token.txt')).read().strip()
+token_header = {'Authorization': 'token ' + token}
+
+r = requests.get(api_url, headers=token_header)
+		
+if r.status_code != requests.codes.ok:
+   print("Failed to get PR status [HTTP %d]" % r.status_code)
+   print(r.headers)
+   try:
+      print(r.json())
+   except Exception:
+      pass
+   sys.exit(1)
+v = r.json()
+print("PR {} is in state: {}".format(PR, v['state']))
+if v['state'] != 'open':
+   open(opts.stamp, 'w').close()
+sys.exit(0)
+   
+
