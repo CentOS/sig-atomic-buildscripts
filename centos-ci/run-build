@@ -3,7 +3,7 @@ set -xeuo pipefail
 
 origdir=$1
 buildscriptsdir=../sig-atomic-buildscripts
-tempdir=$(mktemp -d "stamp.XXXXXX")
+tempdir=$(mktemp -t -d "stamp.XXXXXX")
 touch ${tempdir}/.testtmp
 function cleanup () {
     if test -n "${TEST_SKIP_CLEANUP:-}"; then
