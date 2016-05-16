@@ -112,5 +112,8 @@ echo "-----------------------------------------------------------------------"
 # Note that running rpm recreates the rpm db files which aren't needed/wanted
 rm -f /var/lib/rpm/__db*
 
+echo "Adding devmode GRUB2 menu item"
+/usr/libexec/atomic-devmode/bootentry add
+
 %end
 
