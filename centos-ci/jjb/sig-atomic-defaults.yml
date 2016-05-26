@@ -14,9 +14,7 @@
           url: "https://github.com/cgwalters/centos-ci-skeleton"
           basedir: cciskel
       - git:
-          url: "https://github.com/cgwalters/sig-atomic-buildscripts"
+          url: "https://github.com/CentOS/sig-atomic-buildscripts"
           basedir: sig-atomic-buildscripts
-          branches:
-            - pr-testing
 
       
