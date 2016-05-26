@@ -30,6 +30,11 @@ cache:
   buildserial: 0
 
 components:
+  # Keeping this around for a while to have a convenient
+  # repository to test Homu/PRs etc.
+  - src: github:cgwalters/playground
+    spec: internal
+
   - src: github:projectatomic/bubblewrap
     spec: internal
 
@@ -96,6 +101,8 @@ components:
     spec: internal
 
   - src: github:projectatomic/rpm-ostree
+    rpmwithout:
+      - bundled_libhif
     distgit:
       branch: master
       patches: drop

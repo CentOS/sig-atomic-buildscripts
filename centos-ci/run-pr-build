@@ -1,0 +1,49 @@
+#!/bin/bash
+set -xeuo pipefail
+
+origdir=$(pwd)
+buildscriptsdir=../sig-atomic-buildscripts
+giturl=$1
+gitpath=$2
+gitrev=$3
+build=centos-continuous
+
+tempdir=$(mktemp -t -d "stamp.XXXXXX")
+touch ${tempdir}/.testtmp
+function cleanup () {
+    if test -n "${TEST_SKIP_CLEANUP:-}"; then
+	echo "Skipping cleanup of ${tempdir}"
+    else if test -f ${tempdir}/.testtmp; then
+	rm "${tempdir}" -rf
+    fi
+    fi
+}
+
+trap cleanup EXIT
+. ~/rsync-password.sh 
+
+rsync -q --stats -av sig-atomic@artifacts.ci.centos.org::sig-atomic/rdgo/${build} .
+cd ${build}
+
+ln -sf ${buildscriptsdir}/overlay.yml .
+if ! test -d src; then
+    rpmdistro-gitoverlay init
+fi    
+
+# Create this now so it always exists for Jenkins
+mkdir -p ${origdir}/build-logs
+
+# Git fetch all the things
+rpmdistro-gitoverlay resolve --override-giturl ${giturl} --override-gitrepo-from file://${HOME}/${gitpath} --override-gitrepo-from-rev ${gitrev} --touch-if-changed ${tempdir}/fetch.stamp
+resolve_ecode=$?
+if test "$resolve_ecode" == 77; then
+    exit 0
+else
+    if test "$resolve_ecode" != 0; then
+       echo "resolve exited with code $resolve_ecode"
+       exit 1
+    fi
+fi
+set -e
+
+rpmdistro-gitoverlay build --touch-if-changed ${tempdir}/build.stamp --logdir=${origdir}/build-logs

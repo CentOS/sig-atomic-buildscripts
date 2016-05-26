@@ -26,10 +26,7 @@
 # Ensure we see fresh data
 - command: yum clean expire-cache      
 
-# COPR is down right now
-- command: yum -y install https://s3.amazonaws.com/cdn.verbum.org/rpmdistro-gitoverlay-2016.2.8.gd053af7-1.el7.noarch.rpm
-
-- yum: name={{ item }} state=present
+- yum: name={{ item }} state=latest
   with_items:
     - rsync
     - mock
@@ -39,12 +36,21 @@
 
 # nspawn is better, also https://lists.fedoraproject.org/pipermail/buildsys/2015-July/004833.html
 # Also https://bugzilla.redhat.com/show_bug.cgi?id=1328212
-- lineinfile: dest=/etc/mock/site-defaults.cfg line="config_opts['use_nspawn'] = True"
+- lineinfile: dest=/etc/mock/site-defaults.cfg "line={{ item }}"
+  with_items:
+    - "config_opts['plugin_conf']['tmpfs_enable'] = True"
+    - "config_opts['use_nspawn'] = True"
 
-- user: name=builder groups=mock,wheel
+- user: name={{ item }} groups=mock,wheel
+  with_items:
+    - builder
+    - prbuilder
 
 - lineinfile: "dest=/etc/sudoers state=present regexp='^%wheel' line='%wheel ALL=(ALL) NOPASSWD: ALL'"
 
 - authorized_key:
-    user: builder
-    key: "{{ lookup('file', lookup('env', 'WORKSPACE') + '/builder.key.pub') }}"
+    user: "{{ item }}"
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  with_items:
+    - builder
+    - prbuilder
