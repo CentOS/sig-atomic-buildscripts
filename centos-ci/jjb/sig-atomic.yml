@@ -23,7 +23,7 @@
     builders:
       - macro-cciskel-duffy-prepared-allocate:
           jobclass: builder
-          duffytimeoutsecs: 360
+          duffytimeoutsecs: 3600
           playbook: sig-atomic-buildscripts/centos-ci/setup/setup-system.yml
       - shell: |
           #!/bin/bash
