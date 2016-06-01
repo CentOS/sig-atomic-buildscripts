@@ -97,7 +97,7 @@
         JJB Code Location: <a href="https://github.com/CentOS/sig-atomic-buildscripts">https://github.com/CentOS/sig-atomic-buildscripts</a><br>
         Managed by Jenkins Job Builder. Do not edit via web.<br>
     scm:
-      - atomic-scms
+     - atomic-scms
      - git:
           url: "{giturl}"
           basedir: "{projname}"
