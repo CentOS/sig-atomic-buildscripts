@@ -31,10 +31,7 @@ rpmdistro-gitoverlay resolve --fetch-all --touch-if-changed ${tempdir}/fetch.sta
 
 # Do an RPM build if something changed
 if test -f ${tempdir}/fetch.stamp; then
-    build_success=false
-    if rpmdistro-gitoverlay build --touch-if-changed ${tempdir}/build.stamp --logdir=${origdir}/build-logs; then
-	build_success=true
-    fi
+    rpmdistro-gitoverlay build --touch-if-changed ${tempdir}/build.stamp --logdir=${origdir}/build-logs
 fi
 
 if ! test -d ostree/repo/objects; then

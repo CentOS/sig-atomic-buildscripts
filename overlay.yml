@@ -70,8 +70,11 @@ components:
       branch: master
 
   - src: github:projectatomic/skopeo
+    # https://github.com/projectatomic/skopeo/issues/89
+    freeze: 026acb2a5726d6b4994ce0dfff34ccb9367b9d77
     distgit:
       branch: master
+      freeze: 5d9911952c34defcf625a69b2ca451345e52e459
 
   - distgit: etcd
 
@@ -89,8 +92,11 @@ components:
       patches: drop
 
   # Maybe in the future track libsolv git master, but it's not something
-  # we actively hack on
-  - distgit: libsolv
+  # we actively hack on.
+  - src: distgit
+    distgit:
+      name: libsolv
+      branch: master
     
   # In contrast I want to land a lot of features in librepo
   - src: github:Tojaj/librepo
