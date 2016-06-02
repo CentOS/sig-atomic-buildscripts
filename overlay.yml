@@ -21,7 +21,7 @@ aliases:
 
 distgit:
   prefix: fedorapkgs
-  branch: f23
+  branch: f24
   
 root:
   mock: centos-7-and-extras-$arch.cfg
@@ -59,7 +59,6 @@ components:
   - src: distgit
     distgit:
       name: python-docker-py
-      branch: f24
 
   - distgit: go-srpm-macros
 
@@ -82,7 +81,11 @@ components:
     distgit: 
       patches: drop
 
-  - distgit: gtk-doc
+  - src: distgit
+    distgit:
+      name: gtk-doc
+      # Newer than f23 requires new perl, so avoid that.
+      branch: f23
 
   - distgit: glib2
 
