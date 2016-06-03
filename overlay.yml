@@ -48,6 +48,20 @@ components:
     distgit:
       branch: master
 
+  - distgit: ansible
+
+  - distgit: py-bcrypt
+
+  - distgit: python-etcd
+
+  - distgit: python-falcon
+
+  - distgit: python-jinja2
+
+  - distgit: python-requests
+
+  - distgit: python-setuptools
+
   - src: github:projectatomic/commissaire
     spec: internal
 
