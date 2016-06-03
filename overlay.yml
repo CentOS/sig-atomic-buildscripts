@@ -21,7 +21,7 @@ aliases:
 
 distgit:
   prefix: fedorapkgs
-  branch: f23
+  branch: f24
   
 root:
   mock: centos-7-and-extras-$arch.cfg
@@ -30,6 +30,9 @@ cache:
   buildserial: 0
 
 components:
+  - distgit: go-srpm-macros
+    srpmroot: true
+
   # Keeping this around for a while to have a convenient
   # repository to test Homu/PRs etc.
   - src: github:cgwalters/playground
@@ -59,22 +62,23 @@ components:
   - src: distgit
     distgit:
       name: python-docker-py
-      branch: f24
-
-  - distgit: go-srpm-macros
 
   - distgit: go-compilers
+
+  - src: distgit
+    distgit:
+      name: golang
+      # This just contains https://bugzilla.redhat.com/show_bug.cgi?id=1342329
+      src: https://gitlab.com/cgwalters/golang-rpm-package.git
+      branch: master
 
   - src: github:projectatomic/atomic
     distgit:
       branch: master
 
   - src: github:projectatomic/skopeo
-    # https://github.com/projectatomic/skopeo/issues/89
-    freeze: 026acb2a5726d6b4994ce0dfff34ccb9367b9d77
     distgit:
       branch: master
-      freeze: 5d9911952c34defcf625a69b2ca451345e52e459
 
   - distgit: etcd
 
@@ -82,7 +86,11 @@ components:
     distgit: 
       patches: drop
 
-  - distgit: gtk-doc
+  - src: distgit
+    distgit:
+      name: gtk-doc
+      # Newer than f23 requires new perl, so avoid that.
+      branch: f23
 
   - distgit: glib2
 
