@@ -26,6 +26,9 @@
 # Ensure we see fresh data
 - command: yum clean expire-cache      
 
+# Use this when COPR is down
+- command: yum -y install https://s3.amazonaws.com/cdn.verbum.org/rpmdistro-gitoverlay-2016.2.13.g57a5c88-1.el7.noarch.rpm
+
 - yum: name={{ item }} state=latest
   with_items:
     - rsync
