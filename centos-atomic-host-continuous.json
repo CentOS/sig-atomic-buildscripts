@@ -2,5 +2,6 @@
     "include": "centos-atomic-host.json",
     "ref": "centos-atomic-host/7/x86_64/devel/continuous",
     "automatic_version_prefix": "2016.0",
-    "repos": ["atomic-centos-continuous"]
+    "repos": ["atomic-centos-continuous"],
+    "packages": ["centos-devel-atomic-host-release"]
 }
