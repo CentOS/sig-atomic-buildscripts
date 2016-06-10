@@ -33,6 +33,9 @@ components:
   - distgit: go-srpm-macros
     srpmroot: true
 
+  - src: github:projectatomic/centos-release-atomic-host-devel
+    spec: internal
+
   # Keeping this around for a while to have a convenient
   # repository to test Homu/PRs etc.
   - src: github:cgwalters/playground
