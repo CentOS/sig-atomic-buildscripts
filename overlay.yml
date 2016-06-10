@@ -122,3 +122,5 @@ components:
     distgit:
       branch: master
       patches: drop
+
+  - distgit: kubernetes
