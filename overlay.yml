@@ -124,3 +124,10 @@ components:
       patches: drop
 
   - distgit: kubernetes
+
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1340542
+  - src: distgit
+    disgit:
+      name: selinux-policy
+      branch: master
+      src: github:cgwalters/selinux-policy-centos-atomic-backport
