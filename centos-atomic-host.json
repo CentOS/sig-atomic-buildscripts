@@ -64,6 +64,8 @@
 		 "tuned", "tuned-profiles-atomic",
 		 "kubernetes", "etcd",
 		 "flannel",
+		 "bubblewrap",
+		 "fuse",
 		 "irqbalance",
 		 "bash-completion",
 		 "rsync", "tmux",
