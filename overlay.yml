@@ -49,6 +49,7 @@ components:
   - src: github:projectatomic/oci-systemd-hook
     distgit:
       branch: master
+      freeze: 354b9afc28bbe1b59caca30b1435a57e459c6201
 
   - src: github:projectatomic/oci-register-machine
     distgit:
