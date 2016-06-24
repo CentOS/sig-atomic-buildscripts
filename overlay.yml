@@ -80,6 +80,8 @@ components:
       branch: master
 
   - src: github:projectatomic/skopeo
+    # repo priorities aren't wired up in libhif right now
+    override-version: "1.10"
     distgit:
       branch: master
       patches: drop
