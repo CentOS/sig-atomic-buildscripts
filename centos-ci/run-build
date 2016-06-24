@@ -15,6 +15,9 @@ function cleanup () {
 }
 trap cleanup EXIT
 
+# Ensure we're operating on a clean base
+(cd ${buildscriptsdir} && git clean -dfx && git reset --hard HEAD)
+
 ln -sf ${buildscriptsdir}/overlay.yml .
 if ! test -d src; then
     rpmdistro-gitoverlay init
