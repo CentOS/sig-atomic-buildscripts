@@ -1,0 +1,4 @@
+[virt7-docker-el-candidate]
+name=virt7-docker-el-candidate
+baseurl=http://cbs.centos.org/repos/virt7-docker-el-candidate/x86_64/os/
+enabled=0
