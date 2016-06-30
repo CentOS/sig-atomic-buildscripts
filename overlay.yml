@@ -115,13 +115,7 @@ components:
   # In contrast I want to land a lot of features in librepo
   - src: github:Tojaj/librepo
 
-  # rpm-ostree always needs bleeding edge libhif
-  - src: github:rpm-software-management/libhif
-    spec: internal
-
   - src: github:projectatomic/rpm-ostree
-    rpmwithout:
-      - bundled_libhif
     distgit:
       branch: master
       patches: drop
