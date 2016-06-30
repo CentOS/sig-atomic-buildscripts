@@ -13,8 +13,12 @@
       - git:
           url: "https://github.com/cgwalters/centos-ci-skeleton"
           basedir: cciskel
+          branches:
+            - master
       - git:
           url: "https://github.com/CentOS/sig-atomic-buildscripts"
           basedir: sig-atomic-buildscripts
+          branches:
+            - master
 
       

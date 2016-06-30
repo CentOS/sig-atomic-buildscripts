@@ -4,29 +4,8 @@
     description: |
       <p>This job tracks Project Atomic git upstreams and generates two things: RPMs, and an OSTree commit stream, both
       for CentOS 7.</p>
-      <p>Input repositories are in <a href="https://github.com/CentOS/sig-atomic-buildscripts/blob/master/overlay.yml">this overlay.yml</a>.</p>
-
-      <p>The results are stored in <a href="https://ci.centos.org/artifacts/sig-atomic/rdgo/centos-continuous/">CentOS CI Artifacts</a>.</p>
-      <p>
-      rpm-md repo configuration:
-      <pre>
-      [atomic-centos-continuous]
-      baseurl=https://ci.centos.org/artifacts/sig-atomic/rdgo/centos-continuous/build
-      gpgcheck=0
-      </pre>
-      </p>
-
-      <p>
-      OSTree configuration:
-      <pre>
-      ostree remote add --set=gpg-verify=false centos-atomic-continuous https://ci.centos.org/artifacts/sig-atomic/rdgo/centos-continuous/ostree/repo/
-      rpm-ostree rebase centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous
-      </pre>
-      </p>
-      <p>
-      JJB Code Location: <a href="https://github.com/CentOS/sig-atomic-buildscripts">https://github.com/CentOS/sig-atomic-buildscripts</a><br>
-      Managed by Jenkins Job Builder. Do not edit via web.
-      </p>
+      <p>See <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel</a>
+         for more information.</p>
     scm:
       - atomic-scms
     triggers:
@@ -46,12 +25,12 @@
 
           (echo -n "export RSYNC_PASSWORD=" && cat ~/duffy.key | cut -c '-13') > rsync-password.sh
 
-          rsync -q -Hrlptv --stats -e "ssh -i ${WORKSPACE}/builder.key" sig-atomic-buildscripts rsync-password.sh builder@${DUFFY_HOST}:
+          rsync -q -Hrlptv --stats -e ssh sig-atomic-buildscripts rsync-password.sh builder@${DUFFY_HOST}:
           build_success=true
-          if ! ssh -tt -i ${WORKSPACE}/builder.key builder@${DUFFY_HOST} ./sig-atomic-buildscripts/centos-ci/run-build-and-rsync; then
+          if ! ssh -tt builder@${DUFFY_HOST} ./sig-atomic-buildscripts/centos-ci/run-build-and-rsync; then
             build_success=false
           fi
-          rsync -q -Hrlptv --stats -e "ssh -i ${WORKSPACE}/builder.key" builder@${DUFFY_HOST}:build-logs $WORKSPACE/build-logs || true
+          rsync -q -Hrlptv --stats -e ssh builder@${DUFFY_HOST}:build-logs $WORKSPACE/build-logs || true
           # Exit with code from the build
           if test "${build_success}" = "false"; then
             echo 'Build failed, see logs above'; exit 1
