@@ -120,6 +120,14 @@ components:
       branch: master
       patches: drop
 
+  # for micro-yuminst
+  - src: github:rpm-software-management/libhif
+    override-version: "0.7.0"
+    spec: internal
+
+  - src: https://gitlab.com/cgwalters/micro-yuminst.git
+    spec: internal
+
   - distgit: kubernetes
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1340542
