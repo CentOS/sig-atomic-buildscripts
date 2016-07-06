@@ -37,7 +37,7 @@ cd ${BuildDir}
 
 # Init, make sure we have the bits we need installed. 
 cp -f ${GitDir}/rhel-atomic-rebuild.repo /etc/yum.repos.d/
-yum -y install ostree rpm-ostree docker libvirt epel-release
+yum -y install ostree rpm-ostree-2015.11-2.atomic.el7.x86_64 docker libvirt epel-release
 
 cp -f ${GitDir}/atomic7-testing.repo /etc/yum.repos.d/
 echo 'enabled=0' >> /etc/yum.repos.d/atomic7-testing.repo
