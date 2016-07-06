@@ -28,6 +28,7 @@
     "check-groups": { "type": "file", "filename": "group" },
 
     "packages": ["atomic",
+                 "runc",
 		 "systemd", "kernel", "rpm-ostree-client",
 		 "dracut-network",
 		 "biosdevname",
