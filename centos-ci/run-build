@@ -50,6 +50,46 @@ if test -f ${tempdir}/treecompose.stamp; then
     ostree --repo=ostree/repo summary -u
     rpm-ostree db --repo=ostree/repo diff centos-atomic-host/7/x86_64/devel/continuous{^,}
     ostree --repo=ostree/repo static-delta generate centos-atomic-host/7/x86_64/devel/continuous
-    ostree --repo=ostree/repo prune --keep-younger-than='30 days ago' --refs-only
-    ostree --repo=ostree/repo summary -u
 fi
+
+# Now, generate a delta from the release to continuous
+cat >centos-atomic-sig.asc <<EOF
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+mQENBFV4Hp8BCAC01+PMJx3Fc8U7L2cCNKH4bxtT3fIVl8s3bIzP8u1wJVP+C/tX
+R0uEHCtfgscNZV/krMphb+WO/d11azKwT4GueqsLkkd3wXkOaQuN+0YP/s96iRZF
+0miEt3KN8k91rFxuow82H9K+vQ59masGCqkGRyDFFFUwJgIpqfMjEU3eIkYkyaer
+m85d1QDQigGbIuq5dIdzMp+NdDfh/j/8xnGNEOELcBeHUH3SQzaoMV+opckLZCpy
+DorXDBCuQPcrOoE3jLjntrTXKsGPUmh474X2rGt6cJCk0JhPL2AyseyWC9C3WLqF
+z45Hc62eP9tfmeEi9e20ulJZClqpd2VvrV3xABEBAAG0XENlbnRPUyBBdG9taWMg
+U0lHIChodHRwOi8vd2lraS5jZW50b3Mub3JnL1NwZWNpYWxJbnRlcmVzdEdyb3Vw
+L0F0b21pYykgPHNlY3VyaXR5QGNlbnRvcy5vcmc+iQE5BBMBAgAjBQJVeB6fAhsD
+BwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQ8X50VpG6gzV0dwf9GjmU1rnt
+ps4/VK5QtUpGgO2nBAo3Aii3RUYc9alL5MAeFz+CMeA/mLmB4j/6ZrD7QfOB2puS
+cP+bjKGS+fIyMfNBxdAdEeyMkbbZnjY9s8V3c3WPqrYjsSmKK0UnVREjZKOVrpyE
+vsuesnxl2dWZ139KK4ZbPh6Dv8stS0nDq3QFq290uWaBst368kW4/LAzEkejhAt2
+JoZw0NbO7X4Dxp6Ix0flwMZ1bUdmQPh4aj1EHq6+tnC4ndCOJuausBSb/8/6g9Vg
+NJ/eBBYKDPgKw/FVIA3QvJFAAnryOFCe8oC9NaunFfCAGx7Q3YCiHoXpYIcEwVS+
+3gU6ngssHi+p8Q==
+=Rs/S
+-----END PGP PUBLIC KEY BLOCK-----
+EOF
+origrev=$(ostree --repo=ostree/repo rev-parse centos-atomic-host/7/x86_64/standard || true)
+ostree --repo=ostree/repo remote add upstream --if-not-exists --gpg-import centos-atomic-sig.asc http://mirror.centos.org/centos/7/atomic/x86_64/repo
+ostree --repo=ostree/repo pull --mirror upstream centos-atomic-host/7/x86_64/standard
+newrev=$(ostree --repo=ostree/repo rev-parse centos-atomic-host/7/x86_64/standard)
+if test -f ${tempdir}/treecompose.stamp || test "${origrev}" != "${newrev}"; then
+    changed=true
+else
+    changed=false
+fi
+if ${changed}; then
+    ostree --repo=ostree/repo static-delta generate --from centos-atomic-host/7/x86_64/standard --to centos-atomic-host/7/x86_64/devel/continuous
+fi
+
+# Finally, prune and regenerate summary
+if ${changed}; then
+    ostree --repo=ostree/repo prune --keep-younger-than='30 days ago' --refs-only
+fi
+ostree --repo=ostree/repo summary -u
