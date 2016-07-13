@@ -42,6 +42,56 @@
           allow-empty: 'true'
       - macro-cciskel-duffy-deallocate
 
+- job:
+    name: atomic-dockerimage-centosmin
+    node: atomic-sig-ci-slave01 
+    description: |
+      <p>This job builds <a href="https://github.com/cgwalters/centos-dockerbase-minimal">https://github.com/cgwalters/centos-dockerbase-minimal</a></p>
+    scm:
+      - atomic-scms
+      - git:
+          url: "https://github.com/cgwalters/centos-dockerbase-minimal"
+          basedir: centosmin
+          branches:
+            - master
+
+    triggers:
+      - github
+      - timed: "H/30 * * * *"
+
+    defaults: atomic-defaults
+
+    builders:
+      - macro-cciskel-duffy-prepared-allocate:
+          jobclass: builder
+          duffytimeoutsecs: 3600
+          playbook: sig-atomic-buildscripts/centos-ci/setup/setup-system.yml
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+
+          # Work around https://lists.centos.org/pipermail/ci-users/2016-July/000302.html
+          cat >build-centos-ci.sh<<EOF
+          #!/bin/bash
+          set -euo pipefail
+          cd ~/centosmin
+          sed -i -e "s,^baseurl=https://ci.centos.org/artifacts/,baseurl=http://artifacts.ci.centos.org/," atomic-centos-continuous.repo
+          exec sudo ./build-via-yum.sh
+          EOF
+          chmod a+x build-centos-ci.sh
+
+          for x in sig-atomic-buildscripts/ centosmin/ build-centos-ci.sh; do \
+            rsync -q -Hrlptv --stats -e ssh ${x} builder@${DUFFY_HOST}:${x}; \
+          done
+          ssh -tt builder@${DUFFY_HOST} ./build-centos-ci.sh
+          rsync -q -Hrlptv --stats -e ssh builder@${DUFFY_HOST}:centosmin/centosmin.tar.gz .
+
+    publishers:
+      - archive:
+          artifacts: 'centosmin.tar.gz'
+          allow-empty: 'true'
+      - macro-cciskel-duffy-deallocate
+
 # create the jobs using the job templates
 - project:
     name: atomic-rdgo
