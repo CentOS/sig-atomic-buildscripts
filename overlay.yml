@@ -130,6 +130,10 @@ components:
 
   - distgit: kubernetes
 
+  # The new thin_ls command is nice
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1228593
+  - distgit: device-mapper-persistent-data
+
   # https://bugzilla.redhat.com/show_bug.cgi?id=1340542
   - src: distgit
     distgit:
