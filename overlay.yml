@@ -125,7 +125,7 @@ components:
     override-version: "0.7.0"
     spec: internal
 
-  - src: https://gitlab.com/cgwalters/micro-yuminst.git
+  - src: github:cgwalters/micro-yuminst.git
     spec: internal
 
   - distgit: kubernetes
