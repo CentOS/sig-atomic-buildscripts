@@ -1,0 +1,8 @@
+# This file defines promoted releases from continuous -> alpha, and
+# possibly in the future from alpha -> beta.  You can think of this
+# as simply a declarative way to manage ostree commits.  See `do-release-tags`.
+
+baseref: "centos-atomic-host/7/x86_64/devel/"
+
+releases:
+  alpha: 04d5efc4e069bcb38c6d847835a6af98299b17388c1a49838e917dae11b262c4

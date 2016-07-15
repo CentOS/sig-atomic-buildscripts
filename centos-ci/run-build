@@ -1,6 +1,7 @@
 #!/bin/bash
 set -xeuo pipefail
 
+dn=$(cd $(dirname $0) && pwd)
 origdir=$1
 buildscriptsdir=../sig-atomic-buildscripts
 tempdir=$(mktemp -t -d "stamp.XXXXXX")
@@ -42,6 +43,9 @@ if ! test -d ostree/repo/objects; then
     ostree --repo=ostree/repo init --mode=archive-z2
 fi
 
+# Update release tags
+$dn/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
+
 treefile=centos-atomic-host-continuous.json
 sed -i -e 's,^baseurl=.*,baseurl=file://'$(pwd)/build',' ${buildscriptsdir}/atomic-centos-continuous.repo
 sudo rpm-ostree compose tree --touch-if-changed=${tempdir}/treecompose.stamp --repo=ostree/repo ${buildscriptsdir}/${treefile}
@@ -51,5 +55,8 @@ if test -f ${tempdir}/treecompose.stamp; then
     rpm-ostree db --repo=ostree/repo diff centos-atomic-host/7/x86_64/devel/continuous{^,}
     ostree --repo=ostree/repo static-delta generate centos-atomic-host/7/x86_64/devel/continuous
     ostree --repo=ostree/repo prune --keep-younger-than='30 days ago' --refs-only
-    ostree --repo=ostree/repo summary -u
 fi
+
+# Always regenerate this right now since otherwise we have to track
+# potential changes from anything above.
+ostree --repo=ostree/repo summary -u

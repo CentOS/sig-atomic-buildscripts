@@ -35,6 +35,7 @@
     - mock
     - rpm-ostree
     - fedpkg
+    - PyYAML
     - rpmdistro-gitoverlay
 
 # nspawn is better, also https://lists.fedoraproject.org/pipermail/buildsys/2015-July/004833.html
