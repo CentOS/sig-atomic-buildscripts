@@ -34,6 +34,7 @@
     - rsync
     - mock
     - rpm-ostree
+    - rpm-ostree-toolbox
     - fedpkg
     - PyYAML
     - rpmdistro-gitoverlay
