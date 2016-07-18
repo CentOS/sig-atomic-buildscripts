@@ -120,6 +120,11 @@ components:
       branch: master
       patches: drop
 
+  - src: github:projectatomic/rpm-ostree-toolbox
+    distgit:
+      branch: master
+      patches: drop
+
   # for micro-yuminst
   - src: github:rpm-software-management/libhif
     override-version: "0.7.0"
