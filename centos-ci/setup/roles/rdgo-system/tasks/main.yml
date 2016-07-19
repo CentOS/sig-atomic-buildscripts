@@ -23,6 +23,15 @@
       enabled=1
       enabled_metadata=1
 
+- copy:
+    dest: /etc/yum.repos.d/atomic7-testing.repo
+    content: |
+      [atomic7-testing]
+      name=CentOS7 Atomic Testing
+      baseurl=http://cbs.centos.org/repos/atomic7-testing/x86_64/os/
+      gpgcheck=0
+      enabled=1
+
 # Ensure we see fresh data
 - command: yum clean expire-cache      
 
