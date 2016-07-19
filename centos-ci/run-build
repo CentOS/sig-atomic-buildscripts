@@ -3,7 +3,7 @@ set -xeuo pipefail
 
 dn=$(cd $(dirname $0) && pwd)
 origdir=$1
-buildscriptsdir=../sig-atomic-buildscripts
+buildscriptsdir=$(cd ../sig-atomic-buildscripts && pwd)
 tempdir=$(mktemp -t -d "stamp.XXXXXX")
 touch ${tempdir}/.testtmp
 function cleanup () {
@@ -19,16 +19,14 @@ trap cleanup EXIT
 # Ensure we're operating on a clean base
 (cd ${buildscriptsdir} && git clean -dfx && git reset --hard HEAD)
 
+# Create this now so it always exists for Jenkins
+mkdir -p ${origdir}/build-logs
+
+(cd rdgo;
 ln -sf ${buildscriptsdir}/overlay.yml .
 if ! test -d src; then
     rpmdistro-gitoverlay init
 fi    
-
-# Create this now so it always exists for Jenkins
-mkdir -p ${origdir}/build-logs
-
-# Delete files accidentally created in builddir
-rm -f fetch.stap build.stamp treecompose.stamp
 
 # Git fetch all the things
 rpmdistro-gitoverlay resolve --fetch-all --touch-if-changed ${tempdir}/fetch.stamp
@@ -37,6 +35,7 @@ rpmdistro-gitoverlay resolve --fetch-all --touch-if-changed ${tempdir}/fetch.sta
 if test -f ${tempdir}/fetch.stamp; then
     rpmdistro-gitoverlay build --touch-if-changed ${tempdir}/build.stamp --logdir=${origdir}/build-logs
 fi
+)
 
 if ! test -d ostree/repo/objects; then
     mkdir -p ostree/repo
@@ -47,7 +46,7 @@ fi
 $dn/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
 
 treefile=centos-atomic-host-continuous.json
-sed -i -e 's,^baseurl=.*,baseurl=file://'$(pwd)/build',' ${buildscriptsdir}/atomic-centos-continuous.repo
+sed -i -e 's,^baseurl=.*,baseurl=file://'$(pwd)/rdgo/build',' ${buildscriptsdir}/atomic-centos-continuous.repo
 sudo rpm-ostree compose tree --touch-if-changed=${tempdir}/treecompose.stamp --repo=ostree/repo ${buildscriptsdir}/${treefile}
 if test -f ${tempdir}/treecompose.stamp; then
     sudo chown -R -h $USER:$USER ostree/repo

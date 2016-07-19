@@ -7,17 +7,21 @@ basedir=$(cd $(dirname $0) && pwd)
 
 build=centos-continuous
 
-rsync -q --stats -av sig-atomic@artifacts.ci.centos.org::sig-atomic/rdgo/${build} .
+mkdir -p ${build}
 origdir=$(pwd)
 cd ${build}
+for v in rdgo ostree; do
+    rsync --stats -av sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v} .
+done
 
 build_success=false
 if ${basedir}/run-build ${origdir}; then
     build_success=true
 fi
 
-cd ..
-rsync -q --stats -av --delete ${build}/ sig-atomic@artifacts.ci.centos.org::sig-atomic/rdgo/${build}/
+for v in rdgo ostree; do
+    rsync --stats -av ${v} sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}
+done
 if test "${build_success}" = false; then
     echo "Build failed, see logs above"; exit 1
 fi
