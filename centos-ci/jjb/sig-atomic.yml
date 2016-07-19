@@ -2,8 +2,6 @@
     name: atomic-rdgo-centos7
     node: atomic-sig-ci-slave01 
     description: |
-      <p>This job tracks Project Atomic git upstreams and generates two things: RPMs, and an OSTree commit stream, both
-      for CentOS 7.</p>
       <p>See <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel</a>
          for more information.</p>
     scm:
@@ -25,12 +23,12 @@
 
           (echo -n "export RSYNC_PASSWORD=" && cat ~/duffy.key | cut -c '-13') > rsync-password.sh
 
-          rsync -q -Hrlptv --stats -e ssh sig-atomic-buildscripts rsync-password.sh builder@${DUFFY_HOST}:
+          rsync -Hrlptv --stats -e ssh sig-atomic-buildscripts rsync-password.sh builder@${DUFFY_HOST}:
           build_success=true
-          if ! ssh -tt builder@${DUFFY_HOST} ./sig-atomic-buildscripts/centos-ci/run-build-and-rsync; then
+          if ! ssh -tt builder@${DUFFY_HOST} ./sig-atomic-buildscripts/centos-ci/run-rdgo-rsync; then
             build_success=false
           fi
-          rsync -q -Hrlptv --stats -e ssh builder@${DUFFY_HOST}:build-logs $WORKSPACE/build-logs || true
+          rsync -Hrlptv --stats -e ssh builder@${DUFFY_HOST}:build-logs $WORKSPACE/build-logs || true
           # Exit with code from the build
           if test "${build_success}" = "false"; then
             echo 'Build failed, see logs above'; exit 1
@@ -40,6 +38,43 @@
       - archive:
           artifacts: 'build-logs/**'
           allow-empty: 'true'
+      - conditional-publisher:
+          - condition-kind: file-exists
+            condition-filename: build-logs/build.stamp
+            condition-basedir: workspace
+            action:
+              - trigger:
+                  project: 'atomic-treecompose-centos7'
+
+      - macro-cciskel-duffy-deallocate
+
+- job:
+    name: atomic-treecompose-centos7
+    node: atomic-sig-ci-slave01 
+    description: |
+      <p>See <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel</a>
+         for more information.</p>
+    scm:
+      - atomic-scms
+    triggers:
+      - github
+      - timed: "H * * * *"
+
+    defaults: atomic-defaults
+
+    builders:
+      - macro-cciskel-duffy-prepared-allocate:
+          jobclass: builder
+          duffytimeoutsecs: 3600
+          playbook: sig-atomic-buildscripts/centos-ci/setup/setup-system.yml
+      - shell: |
+          #!/bin/bash
+          set -xeuo pipefail
+          (echo -n "export RSYNC_PASSWORD=" && cat ~/duffy.key | cut -c '-13') > rsync-password.sh
+          rsync -Hrlptv --stats -e ssh sig-atomic-buildscripts rsync-password.sh builder@${DUFFY_HOST}:
+          ssh -tt builder@${DUFFY_HOST} ./sig-atomic-buildscripts/centos-ci/run-treecompose
+            
+    publishers:
       - macro-cciskel-duffy-deallocate
 
 - job:

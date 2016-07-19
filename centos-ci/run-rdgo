@@ -1,0 +1,37 @@
+#!/bin/bash
+set -xeuo pipefail
+
+dn=$(cd $(dirname $0) && pwd)
+origdir=$1
+buildscriptsdir=$(cd ../sig-atomic-buildscripts && pwd)
+tempdir=$(mktemp -t -d "stamp.XXXXXX")
+touch ${tempdir}/.testtmp
+function cleanup () {
+    if test -n "${TEST_SKIP_CLEANUP:-}"; then
+	echo "Skipping cleanup of ${tempdir}"
+    else if test -f ${tempdir}/.testtmp; then
+	rm "${tempdir}" -rf
+    fi
+    fi
+}
+trap cleanup EXIT
+
+# Ensure we're operating on a clean base
+(cd ${buildscriptsdir} && git clean -dfx && git reset --hard HEAD)
+
+# Create this now so it always exists for Jenkins
+mkdir -p ${origdir}/build-logs
+
+cd rdgo
+ln -sf ${buildscriptsdir}/overlay.yml .
+if ! test -d src; then
+    rpmdistro-gitoverlay init
+fi    
+
+# Git fetch all the things
+rpmdistro-gitoverlay resolve --fetch-all --touch-if-changed ${tempdir}/fetch.stamp
+
+# Do an RPM build if something changed
+if test -f ${tempdir}/fetch.stamp; then
+    rpmdistro-gitoverlay build --touch-if-changed ${origdir}/build-logs/build.stamp --logdir=${origdir}/build-logs
+fi
