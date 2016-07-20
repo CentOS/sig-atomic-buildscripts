@@ -36,7 +36,8 @@ fi
 $basedir/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
 
 treefile=centos-atomic-host-continuous.json
-sed -i -e "s,^baseurl=https://ci.centos.org/artifacts/,baseurl=http://artifacts.ci.centos.org/," ${buildscriptsdir}/atomic-centos-continuous.repo
+# Work around https://lists.centos.org/pipermail/ci-users/2016-July/000302.html
+sed -i -e 's,https://ci.centos.org/artifacts/,http://artifacts.ci.centos.org/,g' ${buildscriptsdir}/atomic-centos-continuous.repo
 sudo rpm-ostree compose tree --touch-if-changed=${tempdir}/treecompose.stamp --repo=ostree/repo ${buildscriptsdir}/${treefile}
 if test -f ${tempdir}/treecompose.stamp; then
     sudo chown -R -h $USER:$USER ostree/repo

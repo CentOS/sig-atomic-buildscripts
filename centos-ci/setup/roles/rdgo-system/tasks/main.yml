@@ -35,8 +35,8 @@
 # Ensure we see fresh data
 - command: yum clean expire-cache      
 
-# Use this when COPR is down
-- command: yum -y upgrade https://s3.amazonaws.com/cdn.verbum.org/rpmdistro-gitoverlay-2016.2.13.g57a5c88-1.el7.noarch.rpm
+# Hotfixes
+- command: yum -y upgrade https://fedorapeople.org/~walters/rpm-ostree-toolbox-2015.12.10.g3903aa4-1.el7.centos.x86_64.rpm
 
 - yum: name={{ item }} state=latest
   with_items:
@@ -47,6 +47,11 @@
     - fedpkg
     - PyYAML
     - rpmdistro-gitoverlay
+
+- service: name={{ item }} state=started
+  with_items:
+    - docker
+    - libvirtd
 
 # nspawn is better, also https://lists.fedoraproject.org/pipermail/buildsys/2015-July/004833.html
 # Also https://bugzilla.redhat.com/show_bug.cgi?id=1328212

@@ -48,8 +48,8 @@
 
       - macro-cciskel-duffy-deallocate
 
-- job:
-    name: atomic-treecompose-centos7
+- job-template:
+    name: 'atomic-{task}-centos7'
     node: atomic-sig-ci-slave01 
     description: |
       <p>See <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel</a>
@@ -71,8 +71,8 @@
           #!/bin/bash
           set -xeuo pipefail
           (echo -n "export RSYNC_PASSWORD=" && cat ~/duffy.key | cut -c '-13') > rsync-password.sh
-          rsync -Hrlptv --stats -e ssh sig-atomic-buildscripts rsync-password.sh builder@${DUFFY_HOST}:
-          ssh -tt builder@${DUFFY_HOST} ./sig-atomic-buildscripts/centos-ci/run-treecompose
+          rsync -Hrlptv --stats -e ssh sig-atomic-buildscripts rsync-password.sh builder@${{DUFFY_HOST}}:
+          ssh -tt builder@${{DUFFY_HOST}} ./sig-atomic-buildscripts/centos-ci/run-{task}
             
     publishers:
       - macro-cciskel-duffy-deallocate
@@ -130,5 +130,9 @@
 # create the jobs using the job templates
 - project:
     name: atomic-rdgo
+    task:
+      - treecompose
+      - images
     jobs:
       - atomic-rdgo-centos7
+      - 'atomic-{task}-centos7'
