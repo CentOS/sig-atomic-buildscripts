@@ -1,9 +1,9 @@
 #!/bin/bash
 set -xeuo pipefail
-
-dn=$(cd $(dirname $0) && pwd)
-origdir=$1
-buildscriptsdir=$(cd ../sig-atomic-buildscripts && pwd)
+basedir=$(cd $(dirname $0) && pwd)
+origdir=$(pwd)
+build=centos-continuous
+buildscriptsdir=$(cd sig-atomic-buildscripts && pwd)
 tempdir=$(mktemp -t -d "stamp.XXXXXX")
 touch ${tempdir}/.testtmp
 function cleanup () {
@@ -16,26 +16,16 @@ function cleanup () {
 }
 trap cleanup EXIT
 
+. ~/rsync-password.sh 
+
+mkdir -p ${build}
+cd ${build}
+for v in ostree; do
+    rsync --delete --stats -a sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/ ${v}/
+done
+
 # Ensure we're operating on a clean base
 (cd ${buildscriptsdir} && git clean -dfx && git reset --hard HEAD)
-
-# Create this now so it always exists for Jenkins
-mkdir -p ${origdir}/build-logs
-
-(cd rdgo;
-ln -sf ${buildscriptsdir}/overlay.yml .
-if ! test -d src; then
-    rpmdistro-gitoverlay init
-fi    
-
-# Git fetch all the things
-rpmdistro-gitoverlay resolve --fetch-all --touch-if-changed ${tempdir}/fetch.stamp
-
-# Do an RPM build if something changed
-if test -f ${tempdir}/fetch.stamp; then
-    rpmdistro-gitoverlay build --touch-if-changed ${tempdir}/build.stamp --logdir=${origdir}/build-logs
-fi
-)
 
 if ! test -d ostree/repo/objects; then
     mkdir -p ostree/repo
@@ -43,10 +33,11 @@ if ! test -d ostree/repo/objects; then
 fi
 
 # Update release tags
-$dn/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
+$basedir/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
 
 treefile=centos-atomic-host-continuous.json
-sed -i -e 's,^baseurl=.*,baseurl=file://'$(pwd)/rdgo/build',' ${buildscriptsdir}/atomic-centos-continuous.repo
+# Work around https://lists.centos.org/pipermail/ci-users/2016-July/000302.html
+sed -i -e 's,https://ci.centos.org/artifacts/,http://artifacts.ci.centos.org/,g' ${buildscriptsdir}/atomic-centos-continuous.repo
 sudo rpm-ostree compose tree --touch-if-changed=${tempdir}/treecompose.stamp --repo=ostree/repo ${buildscriptsdir}/${treefile}
 if test -f ${tempdir}/treecompose.stamp; then
     sudo chown -R -h $USER:$USER ostree/repo
@@ -59,3 +50,7 @@ fi
 # Always regenerate this right now since otherwise we have to track
 # potential changes from anything above.
 ostree --repo=ostree/repo summary -u
+
+for v in ostree; do
+    rsync --delete --stats -a ${v}/ sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/
+done
