@@ -132,7 +132,9 @@
     name: atomic-rdgo
     task:
       - treecompose
-      - images
+      - installer
+      - image-cloud
+#      - image-pxelive  # disabled for now pending debugging
     jobs:
       - atomic-rdgo-centos7
       - 'atomic-{task}-centos7'

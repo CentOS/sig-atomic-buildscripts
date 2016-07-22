@@ -1,13 +1,13 @@
 <template>
-    <name>centos7atomic</name>
+    <name>cahc</name>
     <os>
         <name>RHEL-7</name>
         <version>0</version>
         <arch>x86_64</arch>
         <install type='url'>
-            <url>http://192.168.122.1:8000/installer/images/</url>
+            <url>https://ci.centos.org/artifacts/sig-atomic/centos-continuous/images/installer/latest/images</url>
         </install>
-        <rootpw>ewwwwwww</rootpw>
+        <rootpw>none</rootpw>
     </os>
 </template>
 

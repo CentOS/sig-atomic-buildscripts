@@ -3,7 +3,7 @@ lang en_US.UTF-8
 keyboard us
 timezone --utc Etc/UTC
 
-auth --useshadow --enablemd5
+auth --enableshadow --passalgo=sha512
 selinux --enforcing
 rootpw --lock --iscrypted locked
 user --name=none
@@ -13,7 +13,9 @@ firewall --disabled
 bootloader --timeout=1 --append="no_timer_check console=tty1 console=ttyS0,115200n8"
 
 network --bootproto=dhcp --device=eth0 --activate --onboot=on
-services --enabled=network,sshd,rsyslog,cloud-init,cloud-init-local,cloud-config,cloud-final
+# We use NetworkManager, and Avahi doesn't make much sense in the cloud
+services --disabled=network,avahi-daemon
+services --enabled=NetworkManager,sshd,rsyslog,cloud-init,cloud-init-local,cloud-config,cloud-final
 
 zerombr
 clearpart --all
@@ -24,24 +26,18 @@ volgroup atomicos pv.01
 logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
 
 # Equivalent of %include fedora-repo.ks
-ostreesetup --osname="centos" --remote="installmedia" --ref="centos/7/atomic/x86_64/cloud-docker-host" --url="http://buildlogs.centos.org/centos/7/atomic/x86_64/repo/" --nogpg
+ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-continuous" --ref="centos-atomic-host/7/x86_64/devel/continuous" --url="https://ci.centos.org/artifacts/sig-atomic/centos-continuous/ostree/repo/" --nogpg
 
 reboot
 
 %post --erroronfail
-# Default storage for Atomic
-if [ -b /dev/mapper/atomicos-root ]; then
-  lvcreate -l 8%FREE -n docker-meta atomicos
-  lvcreate -l 100%FREE -n docker-data atomicos
+# Configure docker-storage-setup to resize the partition table on boot
+# https://github.com/projectatomic/docker-storage-setup/pull/25
+echo 'GROWPART=true' > /etc/sysconfig/docker-storage-setup
 
-  cat <<EOF >> /etc/sysconfig/docker-storage
-
-# Added by Anaconda Atomic post script
-
-DOCKER_STORAGE_OPTIONS=--storage-opt dm.fs=xfs --storage-opt dm.datadev=/dev/mapper/atomicos-docker--data --storage-opt dm.metadatadev=/dev/mapper/atomicos-docker--meta
-
-EOF
-fi
+# Anaconda is writing a /etc/resolv.conf from the generating environment.
+# The system should start out with an empty file.
+truncate -s 0 /etc/resolv.conf
 
 # older versions of livecd-tools do not follow "rootpw --lock" line above
 # https://bugzilla.redhat.com/show_bug.cgi?id=964299
@@ -90,7 +86,6 @@ cat > /etc/hosts << EOF
 EOF
 echo .
 
-
 # Because memory is scarce resource in most cloud/virt environments,
 # and because this impedes forensics, we are differing from the Fedora
 # default of having /tmp on tmpfs.
@@ -102,13 +97,5 @@ echo "RUN_FIRSTBOOT=NO" > /etc/sysconfig/firstboot
 
 echo "Removing random-seed so it's not the same in every image."
 rm -f /var/lib/random-seed
-
-echo "Packages within this cloud image:"
-echo "-----------------------------------------------------------------------"
-rpm -qa
-echo "-----------------------------------------------------------------------"
-# Note that running rpm recreates the rpm db files which aren't needed/wanted
-rm -f /var/lib/rpm/__db*
-
 %end
 
