@@ -1,0 +1,16 @@
+#!/bin/bash
+set -xeuo pipefail
+basedir=$(cd $(dirname $0) && pwd)
+build=centos-continuous
+buildscriptsdir=$(cd sig-atomic-buildscripts && pwd)
+ref=centos-atomic-host/7/x86_64/devel/continuous
+
+. ${basedir}/libtoolbox.sh
+. ~/rsync-password.sh 
+
+prepare_image_build pxelive
+sudo rpm-ostree-toolbox liveimage ${toolbox_base_args} --preserve-ks-url \
+     --tdl ${buildscriptsdir}/cahc.tdl \
+     -k ${buildscriptsdir}/pxelive.ks \
+     -o ${version} --overwrite
+finish_image_build pxelive
