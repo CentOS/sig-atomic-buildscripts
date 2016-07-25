@@ -1,9 +1,7 @@
 # Like the cloud image, but tuned for vagrant.  Enable
 # the vagrant user, disable cloud-init.
 
-%include centos-atomic-host-7.ks
-
-bootloader --append="no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0" --location=mbr --timeout=1
+%include cloud.ks
 
 services --disabled=cloud-init,cloud-init-local,cloud-config,cloud-final
 
