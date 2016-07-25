@@ -10,8 +10,9 @@ ref=centos-atomic-host/7/x86_64/devel/continuous
 
 prepare_image_build cloud
 # FIXME - use ISO content rather than KS
-sudo rpm-ostree-toolbox imagefactory ${toolbox_base_args} -i kvm --preserve-ks-url \
+sudo rpm-ostree-toolbox imagefactory ${toolbox_base_args} -i kvm -i vagrant-libvirt -i vagrant-virtualbox --preserve-ks-url \
      --tdl ${buildscriptsdir}/cahc.tdl \
      -k ${buildscriptsdir}/cloud.ks \
+     --vkickstart ${buildscriptsdir}/vagrant.ks \
      -o ${version} --overwrite
 finish_image_build cloud
