@@ -19,6 +19,11 @@ prepare_image_build() {
     rev=$(ostree --repo=repo rev-parse ${ref})
     version=$(ostree --repo=repo show --print-metadata-key=version ${ref} | sed -e "s,',,g")
 
+    if curl -L --head -f http://artifacts.ci.centos.org/sig-atomic/${build}/images/${imgtype}/${version}/; then
+	echo "Image ${imgtype} at version ${version} already exists"
+	exit 0
+    fi
+
     # Ensure we're operating on a clean base
     (cd ${buildscriptsdir} && git clean -dfx && git reset --hard HEAD)
     # Work around https://lists.centos.org/pipermail/ci-users/2016-July/000302.html
