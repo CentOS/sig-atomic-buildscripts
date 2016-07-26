@@ -27,7 +27,7 @@ prepare_image_build() {
     # Ensure we're operating on a clean base
     (cd ${buildscriptsdir} && git clean -dfx && git reset --hard HEAD)
     # Work around https://lists.centos.org/pipermail/ci-users/2016-July/000302.html
-    for file in config.ini atomic-centos-continuous.repo cahc.tdl cloud.ks pxelive.ks; do
+    for file in config.ini atomic-centos-continuous.repo cahc.tdl cloud.ks vagrant.ks pxelive.ks; do
 	sed -i -e 's,https://ci.centos.org/artifacts/,http://artifacts.ci.centos.org/,g' ${buildscriptsdir}/${file}
     done
 
