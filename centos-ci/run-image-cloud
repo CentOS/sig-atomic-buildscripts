@@ -1,12 +1,8 @@
 #!/bin/bash
 set -xeuo pipefail
 basedir=$(cd $(dirname $0) && pwd)
-build=centos-continuous
-buildscriptsdir=$(cd sig-atomic-buildscripts && pwd)
-ref=centos-atomic-host/7/x86_64/devel/continuous
-
+. ${basedir}/libtask.sh
 . ${basedir}/libtoolbox.sh
-. ~/rsync-password.sh 
 
 prepare_image_build cloud
 # FIXME - use ISO content rather than KS

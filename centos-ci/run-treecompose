@@ -1,36 +1,12 @@
 #!/bin/bash
 set -xeuo pipefail
 basedir=$(cd $(dirname $0) && pwd)
-origdir=$(pwd)
-build=centos-continuous
-buildscriptsdir=$(cd sig-atomic-buildscripts && pwd)
-tempdir=$(mktemp -t -d "stamp.XXXXXX")
-touch ${tempdir}/.testtmp
-function cleanup () {
-    if test -n "${TEST_SKIP_CLEANUP:-}"; then
-	echo "Skipping cleanup of ${tempdir}"
-    else if test -f ${tempdir}/.testtmp; then
-	rm "${tempdir}" -rf
-    fi
-    fi
-}
-trap cleanup EXIT
+. ${basedir}/libtask.sh
+. ${basedir}/libtoolbox.sh
 
-. ~/rsync-password.sh 
-
-mkdir -p ${build}
-cd ${build}
 for v in ostree; do
     rsync --delete --stats -a sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/ ${v}/
 done
-
-# Ensure we're operating on a clean base
-(cd ${buildscriptsdir} && git clean -dfx && git reset --hard HEAD)
-
-if ! test -d ostree/repo/objects; then
-    mkdir -p ostree/repo
-    ostree --repo=ostree/repo init --mode=archive-z2
-fi
 
 # Update release tags
 $basedir/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
@@ -38,8 +14,8 @@ $basedir/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releas
 treefile=centos-atomic-host-continuous.json
 # Work around https://lists.centos.org/pipermail/ci-users/2016-July/000302.html
 sed -i -e 's,https://ci.centos.org/artifacts/,http://artifacts.ci.centos.org/,g' ${buildscriptsdir}/atomic-centos-continuous.repo
-sudo rpm-ostree compose tree --touch-if-changed=${tempdir}/treecompose.stamp --repo=ostree/repo ${buildscriptsdir}/${treefile}
-if test -f ${tempdir}/treecompose.stamp; then
+sudo rpm-ostree compose tree --touch-if-changed=${WORKSPACE}/treecompose.stamp --repo=ostree/repo ${buildscriptsdir}/${treefile}
+if test -f ${WORKSPACE}/treecompose.stamp; then
     sudo chown -R -h $USER:$USER ostree/repo
     ostree --repo=ostree/repo summary -u
     rpm-ostree db --repo=ostree/repo diff centos-atomic-host/7/x86_64/devel/continuous{^,}

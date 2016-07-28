@@ -2,10 +2,15 @@
     name: atomic-defaults
     node: atomic-sig-ci-slave01 
     quiet-period: 0
+    description: |
+      <p>See <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel</a>
+         for more information.</p>
     wrappers:
       - ansicolor
       - workspace-cleanup
       - timestamps
+    scm:
+      - atomic-scms
 
 - scm:
     name: atomic-scms
