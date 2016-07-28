@@ -1,17 +1,5 @@
-- job:
-    name: atomic-rdgo-centos7
-    node: atomic-sig-ci-slave01 
-    description: |
-      <p>See <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel</a>
-         for more information.</p>
-    scm:
-      - atomic-scms
-    triggers:
-      - github
-      - timed: "H/30 * * * *"
-
-    defaults: atomic-defaults
-
+- builder:
+    name: atomic-duffy-builder
     builders:
       - macro-cciskel-duffy-prepared-allocate:
           jobclass: builder
@@ -22,64 +10,93 @@
           set -xeuo pipefail
 
           (echo -n "export RSYNC_PASSWORD=" && cat ~/duffy.key | cut -c '-13') > rsync-password.sh
+          cat >>task.env <<EOF
+          export JENKINS_JOB_NAME="${{JOB_NAME}}"
+          export JENKINS_BUILD_TAG="${{BUILD_TAG}}"
+          EOF
+          cat task.env
 
-          rsync -Hrlptv --stats -e ssh sig-atomic-buildscripts rsync-password.sh builder@${DUFFY_HOST}:
+          rsync -Hrlptv --stats -e ssh task.env sig-atomic-buildscripts rsync-password.sh builder@${{DUFFY_HOST}}:
           build_success=true
-          if ! ssh -tt builder@${DUFFY_HOST} ./sig-atomic-buildscripts/centos-ci/run-rdgo-rsync; then
+          if ! ssh -tt builder@${{DUFFY_HOST}} '. task.env && ./sig-atomic-buildscripts/centos-ci/{task}'; then
             build_success=false
           fi
-          rsync -Hrlptv --stats -e ssh builder@${DUFFY_HOST}:build-logs $WORKSPACE/build-logs || true
+          rsync -Hrlptv --stats -e ssh builder@${{DUFFY_HOST}}:build-logs $WORKSPACE/build-logs || true
           # Exit with code from the build
-          if test "${build_success}" = "false"; then
+          if test "${{build_success}}" = "false"; then
             echo 'Build failed, see logs above'; exit 1
           fi
-            
+
+- publisher:
+    name: atomic-duffy-publisher
     publishers:
       - archive:
           artifacts: 'build-logs/**'
           allow-empty: 'true'
+      - macro-cciskel-duffy-deallocate
+
+- publisher:
+    name: atomic-trigger-on-change
+    publishers:
       - conditional-publisher:
           - condition-kind: file-exists
-            condition-filename: build-logs/build.stamp
+            condition-filename: build-logs/changed.stamp
             condition-basedir: workspace
             action:
               - trigger:
-                  project: 'atomic-treecompose-centos7'
+                  project: "{project}"
 
-      - macro-cciskel-duffy-deallocate
+- job:
+    name: atomic-rdgo-centos7
+    defaults: atomic-defaults
+    triggers:
+      - github
+      - timed: "H/30 * * * *"
 
-- job-template:
-    name: 'atomic-{task}-centos7'
-    node: atomic-sig-ci-slave01 
-    description: |
-      <p>See <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel</a>
-         for more information.</p>
-    scm:
-      - atomic-scms
+    builders:
+      - atomic-duffy-builder:
+          task: run-rdgo-rsync
+            
+    publishers:
+      - atomic-trigger-on-change:
+          project: 'atomic-treecompose-centos7'
+      - atomic-duffy-publisher
+
+- job:
+    name: 'atomic-treecompose-centos7'
+    defaults: atomic-defaults
     triggers:
       - github
       - timed: "H * * * *"
 
-    defaults: atomic-defaults
-
     builders:
-      - macro-cciskel-duffy-prepared-allocate:
-          jobclass: builder
-          duffytimeoutsecs: 3600
-          playbook: sig-atomic-buildscripts/centos-ci/setup/setup-system.yml
-      - shell: |
-          #!/bin/bash
-          set -xeuo pipefail
-          (echo -n "export RSYNC_PASSWORD=" && cat ~/duffy.key | cut -c '-13') > rsync-password.sh
-          rsync -Hrlptv --stats -e ssh sig-atomic-buildscripts rsync-password.sh builder@${{DUFFY_HOST}}:
-          ssh -tt builder@${{DUFFY_HOST}} ./sig-atomic-buildscripts/centos-ci/run-{task}
+      - atomic-duffy-builder:
+          task: run-treecompose
             
     publishers:
-      - macro-cciskel-duffy-deallocate
+      - atomic-trigger-on-change:
+          project: 'atomic-installer-centos7'
+      - atomic-trigger-on-change:
+          project: 'atomic-image-cloud-centos7'
+      - atomic-duffy-publisher
+
+- job-template:
+    name: 'atomic-{imagetask}-centos7'
+    defaults: atomic-defaults
+    triggers:
+      - github
+      - timed: "H H/4 * * *"
+
+    builders:
+      - atomic-duffy-builder:
+          task: run-{imagetask}
+            
+    publishers:
+      - atomic-duffy-publisher
 
 - job:
     name: atomic-dockerimage-centosmin
-    node: atomic-sig-ci-slave01 
+    defaults: atomic-defaults
     description: |
       <p>This job builds <a href="https://github.com/cgwalters/centos-dockerbase-minimal">https://github.com/cgwalters/centos-dockerbase-minimal</a></p>
     scm:
@@ -93,8 +110,6 @@
     triggers:
       - github
       - timed: "H/30 * * * *"
-
-    defaults: atomic-defaults
 
     builders:
       - macro-cciskel-duffy-prepared-allocate:
@@ -127,14 +142,13 @@
           allow-empty: 'true'
       - macro-cciskel-duffy-deallocate
 
-# create the jobs using the job templates
 - project:
     name: atomic-rdgo
-    task:
-      - treecompose
+    imagetask:
       - installer
       - image-cloud
-#      - image-pxelive  # disabled for now pending debugging
+      - image-pxelive
     jobs:
       - atomic-rdgo-centos7
-      - 'atomic-{task}-centos7'
+      - atomic-treecompose-centos7
+      - atomic-{imagetask}-centos7

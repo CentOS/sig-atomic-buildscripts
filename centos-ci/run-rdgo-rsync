@@ -2,26 +2,21 @@
 set -xeuo pipefail
 
 basedir=$(cd $(dirname $0) && pwd)
+. ${basedir}/libtask.sh
 
-. ~/rsync-password.sh 
-
-build=centos-continuous
-
-mkdir -p ${build}
-origdir=$(pwd)
-cd ${build}
 for v in rdgo; do
     rsync --delete --stats -a sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/ ${v}/
 done
 
 build_success=false
-if ${basedir}/run-rdgo ${origdir}; then
+if ${basedir}/run-rdgo; then
     build_success=true
 fi
 
 for v in rdgo; do
     rsync --delete --stats -a ${v}/ sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/
 done
+
 if test "${build_success}" = false; then
     echo "Build failed, see logs above"; exit 1
 fi
