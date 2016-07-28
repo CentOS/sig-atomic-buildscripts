@@ -19,7 +19,13 @@ prepare_image_build() {
     rev=$(ostree --repo=repo rev-parse ${ref})
     version=$(ostree --repo=repo show --print-metadata-key=version ${ref} | sed -e "s,',,g")
 
-    if curl -L --head -f http://artifacts.ci.centos.org/sig-atomic/${build}/images/${imgtype}/${version}/; then
+    if test ${OSTREE_BRANCH} = "continuous"; then
+	imgloc=sig-atomic/${build}/images/${imgtype}
+    else
+	imgloc=sig-atomic/${build}/images-${OSTREE_BRANCH}/${imgtype}
+    fi
+
+    if curl -L --head -f http://artifacts.ci.centos.org/${imgloc}/${version}/; then
 	echo "Image ${imgtype} at version ${version} already exists"
 	exit 0
     fi
@@ -32,6 +38,6 @@ finish_image_build() {
     sudo chown -R -h $USER:$USER ${version}
     ln -s ${version} latest
     cd ..
-    rsync --delete --delete-after --stats -Hrlpt ${imgtype}/ sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/images/${imgtype}/
+    rsync --delete --delete-after --stats -Hrlpt ${imgtype}/ sig-atomic@artifacts.ci.centos.org::${imgloc}/
 }
     
