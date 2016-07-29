@@ -10,6 +10,7 @@ done
 
 # Update release tags
 $basedir/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
+ostree static-delta generate -n centos-atomic-host/7/x86_64/devel/alpha
 
 treefile=centos-atomic-host-continuous.json
 # Work around https://lists.centos.org/pipermail/ci-users/2016-July/000302.html
