@@ -1,6 +1,7 @@
 buildscriptsdir=$(cd ~/sig-atomic-buildscripts && pwd)
 build=centos-continuous
-ref=centos-atomic-host/7/x86_64/devel/continuous
+OSTREE_BRANCH=${OSTREE_BRANCH:-continuous}
+ref=centos-atomic-host/7/x86_64/devel/${OSTREE_BRANCH}
 
 prepare_job() {
     export WORKSPACE=$HOME/jobs/${JENKINS_JOB_NAME}
@@ -23,6 +24,9 @@ prepare_job() {
     for file in config.ini atomic-centos-continuous.repo cahc.tdl cloud.ks vagrant.ks pxelive.ks; do
 	sed -i -e 's,https://ci.centos.org/artifacts/,http://artifacts.ci.centos.org/,g' ${buildscriptsdir}/${file}
     done
+
+    sed -i -e 's,^ref *=.*,ref = '${ref}',' ${buildscriptsdir}/config.ini
+    grep '^ref =' ${buildscriptsdir}/config.ini
 
     cd ${WORKSPACE}
 }

@@ -13,6 +13,7 @@
           cat >>task.env <<EOF
           export JENKINS_JOB_NAME="${{JOB_NAME}}"
           export JENKINS_BUILD_TAG="${{BUILD_TAG}}"
+          export OSTREE_BRANCH="${{OSTREE_BRANCH:-}}"
           EOF
           cat task.env
 
@@ -81,13 +82,15 @@
       - atomic-duffy-publisher
 
 - job-template:
-    name: 'atomic-{imagetask}-centos7'
+    name: 'atomic-cahc-{imagetask}-{branch}'
     defaults: atomic-defaults
     triggers:
       - github
       - timed: "H H/4 * * *"
 
     builders:
+      - inject:
+          properties-content: OSTREE_BRANCH={branch}
       - atomic-duffy-builder:
           task: run-{imagetask}
             
@@ -148,7 +151,10 @@
       - installer
       - image-cloud
       - image-pxelive
+    branch:
+      - continuous
+      - alpha
     jobs:
       - atomic-rdgo-centos7
       - atomic-treecompose-centos7
-      - atomic-{imagetask}-centos7
+      - atomic-cahc-{imagetask}-{branch}

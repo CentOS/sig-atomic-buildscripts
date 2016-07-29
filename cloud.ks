@@ -26,7 +26,7 @@ volgroup atomicos pv.01
 logvol / --size=3000 --fstype="xfs" --name=root --vgname=atomicos
 
 # Equivalent of %include fedora-repo.ks
-ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-continuous" --ref="centos-atomic-host/7/x86_64/devel/continuous" --url="https://ci.centos.org/artifacts/sig-atomic/centos-continuous/ostree/repo/" --nogpg
+ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-continuous" --ref="@OSTREE_REF@" --url="https://ci.centos.org/artifacts/sig-atomic/centos-continuous/ostree/repo/" --nogpg
 
 reboot
 
