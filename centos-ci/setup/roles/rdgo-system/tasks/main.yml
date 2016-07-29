@@ -42,6 +42,7 @@
   with_items:
     - rsync
     - mock
+    - libsolv
     - rpm-ostree
     - rpm-ostree-toolbox
     - fedpkg
