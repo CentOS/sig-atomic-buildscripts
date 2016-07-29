@@ -125,11 +125,6 @@ components:
       branch: master
       patches: drop
 
-  # for micro-yuminst
-  - src: github:rpm-software-management/libhif
-    override-version: "0.7.0"
-    spec: internal
-
   - src: github:cgwalters/micro-yuminst.git
     spec: internal
 
