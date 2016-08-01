@@ -97,8 +97,8 @@
     publishers:
       - atomic-duffy-publisher
 
-- job:
-    name: atomic-dockerimage-centosmin
+- job-template:
+    name: atomic-dockerimage-{distro}-{distrover}
     defaults: atomic-defaults
     description: |
       <p>This job builds <a href="https://github.com/cgwalters/centos-dockerbase-minimal">https://github.com/cgwalters/centos-dockerbase-minimal</a></p>
@@ -128,20 +128,20 @@
           #!/bin/bash
           set -euo pipefail
           cd ~/centosmin
-          sed -i -e "s,^baseurl=https://ci.centos.org/artifacts/,baseurl=http://artifacts.ci.centos.org/," atomic-centos-continuous.repo
-          exec sudo ./build-via-yum.sh
+          sed -i -e "s,^baseurl=https://ci.centos.org/artifacts/,baseurl=http://artifacts.ci.centos.org/," repos-centos/atomic-centos-continuous.repo
+          exec sudo ./build-via-docker-and-yum.sh {distro} {distrover}
           EOF
           chmod a+x build-centos-ci.sh
 
           for x in sig-atomic-buildscripts/ centosmin/ build-centos-ci.sh; do \
-            rsync -q -Hrlptv --stats -e ssh ${x} builder@${DUFFY_HOST}:${x}; \
+            rsync -q -Hrlptv --stats -e ssh ${{x}} builder@${{DUFFY_HOST}}:${{x}}; \
           done
-          ssh -tt builder@${DUFFY_HOST} ./build-centos-ci.sh
-          rsync -q -Hrlptv --stats -e ssh builder@${DUFFY_HOST}:centosmin/centosmin.tar.gz .
+          ssh -tt builder@${{DUFFY_HOST}} ./build-centos-ci.sh
+          rsync -q -Hrlptv --stats -e ssh builder@${{DUFFY_HOST}}:centosmin/{distro}min-{distrover}.tar.gz .
 
     publishers:
       - archive:
-          artifacts: 'centosmin.tar.gz'
+          artifacts: '{distro}min-{distrover}.tar.gz'
           allow-empty: 'true'
       - macro-cciskel-duffy-deallocate
 
@@ -158,3 +158,9 @@
       - atomic-rdgo-centos7
       - atomic-treecompose-centos7
       - atomic-cahc-{imagetask}-{branch}
+      - atomic-dockerimage-{distro}-{distrover}:
+          distro: centos
+          distrover: 7
+      - atomic-dockerimage-{distro}-{distrover}:
+          distro: fedora
+          distrover: 24
