@@ -86,6 +86,9 @@ components:
       branch: master
       patches: drop
 
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1288162#c8
+  - distgit: xfsprogs
+
   - distgit: etcd
 
   - src: gnome:libgsystem
