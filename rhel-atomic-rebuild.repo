@@ -1,5 +1,7 @@
 [rhel-atomic-rebuild]
 name=rhel-atomic-rebuild
-baseurl=http://buildlogs.centos.org/centos/7/atomic/x86_64/Packages/
+# Currently the build is broken since cockpit 0.114 is in 
+#baseurl=http://buildlogs.centos.org/centos/7/atomic/x86_64/Packages/
+baseurl=https://s3.amazonaws.com/s3-sandbox.verbum.org/rhelah-rebuild/
 gpgcheck=0
 exclude=systemd systemd-container systemd-container-libs systemd-libs
