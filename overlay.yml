@@ -89,6 +89,8 @@ components:
   # https://bugzilla.redhat.com/show_bug.cgi?id=1288162#c8
   - distgit: xfsprogs
 
+  - distgit: runc
+
   - distgit: etcd
 
   - src: gnome:libgsystem
