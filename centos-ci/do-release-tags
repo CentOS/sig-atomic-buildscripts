@@ -28,6 +28,8 @@ def fatal(msg):
     sys.exit(1)
 
 parser = argparse.ArgumentParser(prog=sys.argv[0])
+parser.add_argument("--ignore-no-previous-promotion", help="Releases file",
+		    action='store_true')
 parser.add_argument("--repo", help="Repo path",
                     action='store', required=True)
 parser.add_argument("--releases", help="Releases file",
@@ -41,17 +43,46 @@ r.open(None)
 releasedata = yaml.load(open(args.releases))
 baseref = releasedata['baseref']
 changed = False
-for (name,commit) in releasedata['releases'].iteritems():
+for (name,newcommit) in releasedata['releases'].iteritems():
     ref = baseref + name
     [_, current] = r.resolve_rev(ref, True)
     if current is None:
         print("Ref {} does not currently exist".format(ref))
     else:
-        if current == commit:
-            continue
-        print("Previously: {} = {}".format(ref, current))
-    r.set_ref_immediate(None, ref, commit)
-    print("Changed: {} = {}".format(ref, commit))
+        _,currentcommitdata,_ = r.load_commit(current)
+        currentcommitmeta = currentcommitdata.get_child_value(0)
+        currentpromotedv = currentcommitmeta.lookup_value("promotion-of", GLib.VariantType.new("s"))
+        if currentpromotedv is None:
+            msg = "Missing promotion-of metadata key in {}".format(current)
+            if args.ignore_no_previous_promotion:
+                print("warning: " + msg)
+                currentpromoted = '(missing)'
+                newparent = None
+            else:
+                fatal(msg)
+        else:
+            currentpromoted = currentpromotedv.get_string()
+            newparent = current
+            if currentpromoted == newcommit:
+                print("No changes in {} = {}, promoted from {}".format(ref, current, currentpromoted))
+                continue
+        print("Previously: {} = {}, promoted from {}".format(ref, current, currentpromoted))
+    _,newcommitdata,_ = r.load_commit(newcommit)
+    _,newcommitroot,_ = r.read_commit(newcommit, None)
+    newcommitmeta = newcommitdata.get_child_value(0)
+    versionv = newcommitmeta.lookup_value("version", GLib.VariantType.new("s"))
+    if versionv:
+        version = versionv.get_string()
+
+    promotedmetadict = GLib.VariantDict.new(newcommitmeta)
+    promotedmetadict.insert_value("promotion-of", GLib.Variant.new_string(newcommit))
+    body = 'PromotionOf: {}'.format(newcommit)
+
+    mtree = OSTree.MutableTree.new()
+    _,promotedcommit = r.write_commit(newparent, '', body, promotedmetadict.end(), newcommitroot, None)
+    r.set_ref_immediate(None, ref, promotedcommit)
+    if version:
+        print "Promoted commit {} (version {}) => {}".format(newcommit, version, promotedcommit)
     changed = True
 if not changed:
     print("Processed {}: No changes".format(args.releases))
