@@ -35,6 +35,9 @@ reboot
 # https://github.com/projectatomic/docker-storage-setup/pull/25
 echo 'GROWPART=true' > /etc/sysconfig/docker-storage-setup
 
+# Work around https://bugzilla.redhat.com/show_bug.cgi?id=1193590
+cp /etc/skel/.bash* /var/roothome
+
 # Anaconda is writing a /etc/resolv.conf from the generating environment.
 # The system should start out with an empty file.
 truncate -s 0 /etc/resolv.conf
