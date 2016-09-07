@@ -102,6 +102,10 @@
     defaults: atomic-defaults
     description: |
       <p>This job builds <a href="https://github.com/cgwalters/centos-dockerbase-minimal">https://github.com/cgwalters/centos-dockerbase-minimal</a></p>
+    # Right now we're storing the artifacts directly, so prune aggressively
+    logrotate:
+      numToKeep: 10
+      artifactNumToKeep: 5
     scm:
       - atomic-scms
       - git:
