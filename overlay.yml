@@ -113,8 +113,6 @@ components:
       branch: master
       patches: drop
 
-  - distgit: cockpit
-
   # Maybe in the future track libsolv git master, but it's not something
   # we actively hack on.
   - src: distgit
