@@ -54,9 +54,6 @@ components:
     distgit:
       branch: master
 
-  - src: github:projectatomic/commissaire
-    spec: internal
-
   - src: distgit
     distgit:
       name: python-ipaddress
