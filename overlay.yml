@@ -76,12 +76,13 @@ components:
     distgit:
       branch: master
 
-  - src: github:projectatomic/skopeo
+  # A lot of the signing work is happening in this repo/branch and it is
+  # needed to keep the atomic CLI working
+  - src: github:mtrmac/skopeo
     # repo priorities aren't wired up in libhif right now
-    override-version: "1.10"
+    override-version: "1.14"
     distgit:
-      branch: master
-      patches: drop
+      branch: integrate-all-the-things
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1288162#c8
   - distgit: xfsprogs
