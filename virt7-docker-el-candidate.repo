@@ -3,3 +3,6 @@ name=virt7-docker-el-candidate
 baseurl=http://cbs.centos.org/repos/virt7-docker-el-candidate/x86_64/os/
 enabled=0
 gpgcheck=0
+# We want skopeo built from the git repo, so exclude it here and in
+# CentOS-Extras
+exclude=skopeo
