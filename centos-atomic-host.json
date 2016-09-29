@@ -79,7 +79,8 @@
                  "cockpit-ostree",
 		 "setools-console",
                  "device-mapper-multipath",
-                 "sg3_utils"],
+                 "sg3_utils",
+                 "dracut-fips"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
 			     ["kernel", "/lib/modules/.*/drivers/gpu"],
