@@ -80,7 +80,8 @@
 		 "setools-console",
                  "device-mapper-multipath",
                  "sg3_utils",
-                 "dracut-fips"],
+                 "dracut-fips",
+                 "attr"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
 			     ["kernel", "/lib/modules/.*/drivers/gpu"],
