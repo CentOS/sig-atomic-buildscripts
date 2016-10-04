@@ -80,7 +80,6 @@
 		 "setools-console",
                  "device-mapper-multipath",
                  "sg3_utils",
-                 "dracut-fips",
                  "attr"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
