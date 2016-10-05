@@ -41,11 +41,10 @@ cp -r ${BuildDir}/virt/images/* ${BuildDir}/images/
 cp ${BuildDir}/installer/images/images/installer.iso ${BuildDir}/images/centos-atomic-host-7.iso
 rm -rf ${BuildDir}/virt
 
-# TODO we need a liveimage ks for this part
+echo '---------- liveimage ' >> ${LogFile}
+rpm-ostree-toolbox liveimage -c  ${GitDir}/config.ini --preserve-ks-url --tdl ${GitDir}/atomic-7.1.tdl -k ${GitDir}/pxelive.ks -o ${BuildDir}/pxelive --overwrite |& tee ${LogFile}
 
-#echo '---------- liveimage ' >> ${LogFile}
-#rpm-ostree-toolbox liveimage -c  ${GitDir}/config.ini -o pxe-to-live >> ${LogFile} 2>&1
-#echo '----------' >> ${LogFile}
+echo '----------' >> ${LogFile}
 
 #/bin/rsync -PHvar ${BuildDir} pushhost::c7-atomic/x86_64/Builds/ >> ${LogFile}  2>&1
 
