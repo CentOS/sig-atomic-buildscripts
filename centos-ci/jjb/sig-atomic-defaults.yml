@@ -21,6 +21,11 @@
           branches:
             - master
       - git:
+          url: "https://github.com/ostreedev/ostree-releng-scripts"
+          basedir: ostree-releng-scripts
+          branches:
+            - master
+      - git:
           url: "https://github.com/CentOS/sig-atomic-buildscripts"
           basedir: sig-atomic-buildscripts
           branches:
