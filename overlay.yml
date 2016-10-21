@@ -152,3 +152,11 @@ components:
       name: selinux-policy
       branch: master
       src: github:cgwalters/selinux-policy-centos-atomic-backport
+
+  - distgit: cpio
+
+  - src: distgit
+    distgit:
+      name: dracut
+      branch: master
+      src: github:giuseppe/dracut-cahc-distgit
