@@ -5,6 +5,7 @@
 
 services --disabled=cloud-init,cloud-init-local,cloud-config,cloud-final
 
+rootpw vagrant
 user --name=vagrant --password=vagrant
 
 %post --erroronfail
