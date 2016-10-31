@@ -10,6 +10,10 @@ user --name=vagrant --password=vagrant
 
 %post --erroronfail
 
+# The inherited cloud %post locks the passwd, but we want it
+# unlocked for vagrant, just like downstream.
+passwd -u root
+
 # Work around cloud-init being both disabled and enabled; need
 # to refactor to a common base.
 rm /etc/systemd/system/multi-user.target.wants/cloud-init* /etc/systemd/system/multi-user.target.wants/cloud-config*
