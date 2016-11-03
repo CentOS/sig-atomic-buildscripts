@@ -31,7 +31,7 @@ rpm-ostree-toolbox installer --overwrite --ostreerepo ${BuildDir}/repo -c  ${Git
 python -m SimpleHTTPServer 8000 &
 
 echo '---------- Vagrant ' >> ${LogFile}
-rpm-ostree-toolbox imagefactory --overwrite --tdl ${GitDir}/atomic-7.1.tdl -c  ${GitDir}/config.ini -i kvm -i vagrant-libvirt -i vagrant-virtualbox -k ${GitDir}/atomic-7.1-cloud.ks --vkickstart ${GitDir}/atomic-7.1-vagrant.ks -o ${BuildDir}/virt |& tee ${LogFile}
+rpm-ostree-toolbox imagefactory --overwrite --tdl ${GitDir}/atomic-7.1.tdl -c  ${GitDir}/config.ini -i kvm -i vagrant-libvirt -i vagrant-virtualbox -k ${GitDir}/centos-atomic.ks --vkickstart ${GitDir}/centos-atomic-vagrant.ks -o ${BuildDir}/virt |& tee ${LogFile}
 
 
 ## Make a place to copy finished images
