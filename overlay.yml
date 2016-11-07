@@ -17,7 +17,7 @@ aliases:
 
   - name: gnome
     url: https://git.gnome.org/browse/
-    cacertpath: certs/StartComClass2PrimaryIntermediateServerCA.pem
+    cacertpath: certs/LetsEncryptAuthorityX3.crt
 
 distgit:
   prefix: fedorapkgs
