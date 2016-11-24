@@ -10,8 +10,6 @@
 
     "selinux": true,
 
-    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils"],
-
     "install-langs": ["en_US"],
 
     "documentation": false,
@@ -28,6 +26,7 @@
     "check-groups": { "type": "file", "filename": "group" },
 
     "packages": ["atomic",
+		 "glibc", "nss-altfiles", "shadow-utils",
                  "runc",
 		 "systemd", "kernel", "rpm-ostree",
 		 "dracut-network",
