@@ -3,7 +3,7 @@ lang en_US.UTF-8
 keyboard us
 timezone --utc Etc/UTC
 
-auth --useshadow --enablemd5
+auth --useshadow --passalgo=sha512
 selinux --enforcing
 rootpw --lock --iscrypted locked
 user --name=none
@@ -12,7 +12,7 @@ firewall --disabled
 
 bootloader --timeout=1 --append="no_timer_check console=tty1 console=ttyS0,115200n8"
 
-network --bootproto=dhcp --device=eth0 --activate --onboot=on
+network --bootproto=dhcp --onboot=on
 services --enabled=sshd,rsyslog,cloud-init,cloud-init-local,cloud-config,cloud-final
 # We use NetworkManager, and Avahi doesn't make much sense in the cloud
 services --disabled=network,avahi-daemon
@@ -40,6 +40,9 @@ reboot
 # Configure docker-storage-setup to resize the partition table on boot
 # https://github.com/projectatomic/docker-storage-setup/pull/25
 echo 'GROWPART=true' > /etc/sysconfig/docker-storage-setup
+
+# Work around https://bugzilla.redhat.com/show_bug.cgi?id=1193590
+cp /etc/skel/.bash* /var/roothome
 
 # Anaconda is writing a /etc/resolv.conf from the generating environment.
 # The system should start out with an empty file.
@@ -104,6 +107,17 @@ echo "RUN_FIRSTBOOT=NO" > /etc/sysconfig/firstboot
 
 echo "Removing random-seed so it's not the same in every image."
 rm -f /var/lib/random-seed
+
+# Additional  virt drivers vmware and hyperv
+pushd /etc/dracut.conf.d
+# Enable VMWare PVSCSI support for VMWare Fusion guests
+echo 'add_drivers+="mptspi vmw_pvscsi "' > vmware-fusion-drivers.conf
+# Enable HyperV PVSCSI drivers
+echo 'add_drivers+="hv_storvsc hv_netvsc "' > hyperv-drivers.conf
+popd
+# Rerun dracut for the installed kernel (not the running kernel):
+KERNEL_VERSION=$(rpm -q kernel --qf '%{version}-%{release}.%{arch}\n')
+dracut -f /boot/initramfs-$KERNEL_VERSION.img $KERNEL_VERSION
 
 echo "Packages within this cloud image:"
 echo "-----------------------------------------------------------------------"

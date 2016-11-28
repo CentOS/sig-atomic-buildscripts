@@ -9,15 +9,13 @@
 
     "selinux": true,
 
-    "bootstrap_packages": ["filesystem", "glibc", "nss-altfiles", "shadow-utils",
-                           "centos-release-atomic"],
-
     "install-langs": ["en_US"],
 
     "documentation": false,
 
     "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
 
+    "mutate-os-release": "7",
     "postprocess-script": "treecompose-post.sh",
 
     "etc-group-members": ["wheel", "docker"],
@@ -27,7 +25,9 @@
     "check-passwd": { "type": "file", "filename": "passwd" },
     "check-groups": { "type": "file", "filename": "group" },
 
-    "packages": ["atomic",
+    "packages": ["filesystem", "glibc", "nss-altfiles",
+                 "shadow-utils", "centos-release-atomic",
+                 "atomic",
                  "runc",
 		 "systemd", "kernel", "rpm-ostree-client",
 		 "dracut-network",
@@ -60,7 +60,8 @@
 		 "NetworkManager", "vim-minimal", "nano",
 		 "sudo",
 		 "tuned", "tuned-profiles-atomic",
-		 "kubernetes", "etcd",
+		 "kubernetes-client", "kubernetes-node",
+                 "etcd", "cryptsetup",
 		 "flannel",
 		 "irqbalance",
 		 "bash-completion",
@@ -78,14 +79,15 @@
 		 "docker-latest",
 		 "docker-lvm-plugin",
 		 "docker-novolume-plugin",
-                 "stub-redhat-lsb-core-only-for-ceph",
                  "ceph-common", "device-mapper-multipath",
-                 "sg3_utils", "glusterfs-fuse"],
+                 "sg3_utils", "glusterfs-fuse",
+                 "gomtree"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
-			     ["kernel", "/lib/modules/.*/drivers/gpu"],
-			     ["linux-firmware", "/usr/lib/firmware/radeon/.*"],
-			     ["filesystem", "/usr/share/backgrounds"]],
+			     ["filesystem", "/usr/share/backgrounds"],
+                             ["centos-logos", "/usr/share/backgrounds",
+                                              "/usr/share/kde4",
+                                              "/usr/share/anaconda"]],
 
     "units": ["docker.service", "tuned.service", "docker-storage-setup.service"],
 
