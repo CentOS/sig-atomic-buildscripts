@@ -26,3 +26,4 @@ baseurl=http://mirror.centos.org/centos/7/cr/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 enabled=0
+exclude=selinux-policy-targeted selinux-policy policycoreutils-python openssh-clients openssh-server
