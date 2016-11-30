@@ -16,6 +16,7 @@
 
     "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
 
+    "mutate-os-release": "7",
     "postprocess-script": "treecompose-post.sh",
 
     "etc-group-members": ["wheel", "docker"],
