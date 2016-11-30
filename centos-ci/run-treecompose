@@ -4,7 +4,9 @@ basedir=$(cd $(dirname $0) && pwd)
 . ${basedir}/libtask.sh
 . ${basedir}/libtoolbox.sh
 
-~/ostree-releng-scripts/rsync-repos --rsync-opts="--stats" --src="sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/ostree/" --dest=ostree/
+for v in ostree; do
+    rsync --delete --stats -a sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/ ${v}/
+done
 
 # Update release tags
 ~/ostree-releng-scripts/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
@@ -29,4 +31,6 @@ fi
 # potential changes from anything above.
 ostree --repo=ostree/repo summary -u
 
-~/ostree-releng-scripts/rsync-repos --rsync-opts="--stats" --src="ostree/" --dest="sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/ostree/"
+for v in ostree; do
+    rsync --delete --stats -a ${v}/ sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/
+done
