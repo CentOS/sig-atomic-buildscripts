@@ -72,6 +72,15 @@ components:
       src: https://gitlab.com/cgwalters/golang-rpm-package.git
       branch: master
 
+  # Dependency of atomic
+  - src: distgit
+    distgit:
+      name: golang-googlecode-go-crypto
+      branch: master
+  - src: distgit
+    distgit:
+      name: gomtree
+
   - src: github:projectatomic/atomic
     distgit:
       branch: master
