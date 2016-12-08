@@ -33,7 +33,7 @@
       enabled=1
 
 # Ensure we see fresh data
-- command: yum clean expire-cache      
+- command: yum clean expire-cache
 
 # Hotfixes
 - shell: yum -y remove rpm-ostree-toolbox; yum -y install https://fedorapeople.org/~walters/rpm-ostree-toolbox-2015.12.10.gb5b3756-1.el7.centos.x86_64.rpm
@@ -50,6 +50,7 @@
     - fedpkg
     - PyYAML
     - rpmdistro-gitoverlay
+    - libgsystem
 
 - service: name={{ item }} state=started
   with_items:
