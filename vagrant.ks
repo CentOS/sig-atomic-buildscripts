@@ -27,4 +27,39 @@ EOKEYS
 chmod 600 ~vagrant/.ssh/authorized_keys
 chown -R vagrant:vagrant ~vagrant/.ssh/
 
+
+# Hack until we have https://github.com/rhinstaller/anaconda/issues/799
+cd /root
+curl -L -O https://kojipkgs.fedoraproject.org//packages/fuse-sshfs/2.5/1.el7/x86_64/fuse-sshfs-2.5-1.el7.x86_64.rpm
+cat > /usr/local/bin/hack-vagrant-sshfs-install << EOF
+#!/usr/bin/bash
+set -xeuo pipefail
+export HOME=/root
+current=\$(ostree admin --print-current-dir)
+tmpd=\$(mktemp -d)
+cd \${tmpd}
+sshfsrpm=\$(ls /root/fuse-sshfs*.rpm | head -1)
+rpm2cpio < \${sshfsrpm} | cpio -div
+mv ./usr/bin/sshfs \${current}/usr/bin/sshfs
+chcon -t bin_t \${current}/usr/bin/sshfs
+mv \${current}/usr/share/rpm{,.orig}
+cp -a \${current}/usr/share/rpm{.orig,}
+rpm --justdb -ivh \${sshfsrpm}
+EOF
+chmod a+x /usr/local/bin/hack-vagrant-sshfs-install
+cat > /etc/systemd/system/hack-vagrant-sshfs-install.service << EOF
+[Unit]
+Description=Hack to install sshfs
+Before=sshd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/hack-vagrant-sshfs-install
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable hack-vagrant-sshfs-install
+
 %end
