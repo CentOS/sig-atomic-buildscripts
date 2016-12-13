@@ -32,11 +32,17 @@
       gpgcheck=0
       enabled=1
 
+- copy:
+    dest: /etc/yum.repos.d/virt7-docker-el-candidate.repo
+    content: |
+      [virt7-docker-el-candidate]
+      name=virt7-docker-el-candidate
+      baseurl=http://cbs.centos.org/repos/virt7-docker-el-candidate/x86_64/os/
+      enabled=1
+      gpgcheck=0
+
 # Ensure we see fresh data
 - command: yum clean expire-cache
-
-# Hotfixes
-- shell: yum -y remove rpm-ostree-toolbox; yum -y install https://fedorapeople.org/~walters/rpm-ostree-toolbox-2015.12.10.gb5b3756-1.el7.centos.x86_64.rpm
 
 - yum: name={{ item }} state=latest
   with_items:
