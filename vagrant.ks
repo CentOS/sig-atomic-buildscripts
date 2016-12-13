@@ -36,21 +36,23 @@ cat > /usr/local/bin/hack-vagrant-sshfs-install << EOF
 set -xeuo pipefail
 export HOME=/root
 current=\$(ostree admin --print-current-dir)
+sshfsrpm=\$(ls /root/fuse-sshfs*.rpm | head -1)
 tmpd=\$(mktemp -d)
 cd \${tmpd}
-sshfsrpm=\$(ls /root/fuse-sshfs*.rpm | head -1)
 rpm2cpio < \${sshfsrpm} | cpio -div
 mv ./usr/bin/sshfs \${current}/usr/bin/sshfs
+rm \${tmpd} -rf
 chcon -t bin_t \${current}/usr/bin/sshfs
 mv \${current}/usr/share/rpm{,.orig}
 cp -a \${current}/usr/share/rpm{.orig,}
-rpm --justdb -ivh \${sshfsrpm}
+rpm --ignoresize --dbpath=\${current}/usr/share/rpm --justdb -ivh \${sshfsrpm}
 EOF
 chmod a+x /usr/local/bin/hack-vagrant-sshfs-install
 cat > /etc/systemd/system/hack-vagrant-sshfs-install.service << EOF
 [Unit]
 Description=Hack to install sshfs
 Before=sshd.service
+ConditionPathExists=!/usr/bin/sshfs
 
 [Service]
 Type=simple
