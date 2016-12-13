@@ -1,22 +1,20 @@
-# Like the cloud image, but tuned for vagrant.  Enable
-# the vagrant user, disable cloud-init.
+# Like the Atomic Host cloud image, but tuned for vagrant: enable the
+# vagrant user, disable cloud-init.
 
 %include cloud.ks
 
-services --disabled=cloud-init,cloud-init-local,cloud-config,cloud-final
-
-rootpw vagrant
 user --name=vagrant --password=vagrant
+rootpw vagrant
 
 %post --erroronfail
+
+# Really cloud-init should be disabled by default, and enabled
+# only in the openstack qcow2 and AMI.
+systemctl mask cloud-init cloud-init-local cloud-config cloud-final
 
 # The inherited cloud %post locks the passwd, but we want it
 # unlocked for vagrant, just like downstream.
 passwd -u root
-
-# Work around cloud-init being both disabled and enabled; need
-# to refactor to a common base.
-rm /etc/systemd/system/multi-user.target.wants/cloud-init* /etc/systemd/system/multi-user.target.wants/cloud-config*
 
 # Vagrant setup
 sed -i 's/Defaults\s*requiretty/Defaults !requiretty/' /etc/sudoers
