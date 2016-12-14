@@ -151,13 +151,6 @@ components:
   # https://bugzilla.redhat.com/show_bug.cgi?id=1228593
   - distgit: device-mapper-persistent-data
 
-  # https://bugzilla.redhat.com/show_bug.cgi?id=1340542
-  - src: distgit
-    distgit:
-      name: selinux-policy
-      branch: master
-      src: github:cgwalters/selinux-policy-centos-atomic-backport
-
   - distgit: cpio
 
   - src: distgit
