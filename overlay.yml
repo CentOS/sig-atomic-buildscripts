@@ -11,9 +11,8 @@ aliases:
     cacertpath: certs/DigiCertSHA2ExtendedValidationServerCA.pem
 
   - name: fedorapkgs
-    url: https://pkgs.fedoraproject.org/git/rpms/
-    # Note this is actually not in ca-certificates.
-    cacertpath: certs/FedoraProjectCA.pem
+    url: https://src.fedoraproject.org/git/rpms/
+    cacertpath: certs/DigiCertHighAssuranceEVRootCA.crt
 
   - name: gnome
     url: https://git.gnome.org/browse/
