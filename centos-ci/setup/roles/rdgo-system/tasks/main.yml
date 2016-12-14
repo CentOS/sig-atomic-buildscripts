@@ -44,7 +44,9 @@
 # Ensure we see fresh data
 - command: yum clean expire-cache
 
-- yum: name={{ item }} state=latest
+# We need epel testing for the newer fedpkg to parse the new sources
+# from https://fedoraproject.org/wiki/ReleaseEngineering/FlagDay2016
+- yum: name={{ item }} state=latest enablerepo=epel-testing
   with_items:
     - rsync
     - mock
