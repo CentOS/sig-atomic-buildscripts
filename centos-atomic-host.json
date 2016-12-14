@@ -80,8 +80,7 @@
 		 "docker-lvm-plugin",
 		 "docker-novolume-plugin",
                  "ceph-common", "device-mapper-multipath",
-                 "sg3_utils", "glusterfs-fuse",
-                 "gomtree"],
+                 "sg3_utils", "glusterfs-fuse"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
 			     ["filesystem", "/usr/share/backgrounds"],
