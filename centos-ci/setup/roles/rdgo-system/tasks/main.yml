@@ -1,4 +1,9 @@
 ---
+# https://lists.centos.org/pipermail/centos-devel/2016-December/015476.html
+# https://github.com/CentOS/sig-atomic-buildscripts/issues/191
+- selinux:
+    state: permissive
+
 - include: epel7.yml
 
 - copy:
