@@ -32,15 +32,6 @@
       gpgcheck=0
       enabled=1
 
-- copy:
-    dest: /etc/yum.repos.d/virt7-docker-common-candidate.repo
-    content: |
-      [virt7-docker-common-candidate]
-      name=virt7-docker-common-candidate
-      baseurl=https://cbs.centos.org/repos/virt7-docker-common-candidate/x86_64/os/
-      enabled=1
-      gpgcheck=0
-
 # Ensure we see fresh data
 - command: yum clean expire-cache
 
