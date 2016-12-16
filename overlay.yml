@@ -94,10 +94,7 @@ components:
   # https://bugzilla.redhat.com/show_bug.cgi?id=1288162#c8
   - distgit: xfsprogs
 
-  - src: github:opencontainers/runc
-    tag: v1.0.0-rc1
-    distgit:
-      branch: master
+  - distgit: runc
 
   - distgit: etcd
 
