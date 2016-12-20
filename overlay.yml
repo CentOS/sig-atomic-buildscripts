@@ -101,17 +101,10 @@ components:
 
   - distgit: etcd
 
+  # only needed for toolbox now
   - src: gnome:libgsystem
     distgit: 
       patches: drop
-
-  - src: distgit
-    distgit:
-      name: gtk-doc
-      # Newer than f23 requires new perl, so avoid that.
-      branch: f23
-
-  - distgit: glib2
 
   - src: github:ostreedev/ostree
     distgit:
