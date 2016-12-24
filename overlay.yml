@@ -108,6 +108,9 @@ components:
       branch: master
       patches: drop
 
+  # libdnf needs a newer version than Core
+  - distgit: libsolv
+
   - src: github:projectatomic/rpm-ostree
     distgit:
       branch: master
