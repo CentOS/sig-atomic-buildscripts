@@ -13,17 +13,6 @@
       enabled_metadata=1
 
 - copy:
-    dest: /etc/yum.repos.d/centos7-atomic.repo
-    content: |
-      [centos7-atomic]
-      name=CentOS7 Atomic
-      baseurl=http://buildlogs.centos.org/centos/7/atomic/x86_64/Packages/
-      gpgcheck=1
-      gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
-      enabled=1
-      enabled_metadata=1
-
-- copy:
     dest: /etc/yum.repos.d/atomic7-testing.repo
     content: |
       [atomic7-testing]
