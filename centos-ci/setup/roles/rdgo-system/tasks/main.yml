@@ -39,6 +39,7 @@
     - PyYAML
     - rpmdistro-gitoverlay
     - libgsystem
+    - https://kojipkgs.fedoraproject.org//packages/python-distro/1.0.1/2.el7/noarch/python2-distro-1.0.1-2.el7.noarch.rpm  # since it's still pending
 
 - service: name={{ item }} state=started
   with_items:
