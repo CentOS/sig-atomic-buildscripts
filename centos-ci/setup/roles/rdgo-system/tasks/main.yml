@@ -24,8 +24,10 @@
 # Ensure we see fresh data
 - command: yum clean expire-cache
 
-# since it's still pending
-- command: yum -y localinstall https://kojipkgs.fedoraproject.org//packages/python-distro/1.0.1/2.el7/noarch/python2-distro-1.0.1-2.el7.noarch.rpm
+# Add in here direct RPM links, for things that are still pending repodata
+- command: yum -y localinstall {{ item }}
+  with_items:
+    - https://kojipkgs.fedoraproject.org//packages/python-distro/1.0.1/2.el7/noarch/python2-distro-1.0.1-2.el7.noarch.rpm
 
 # We need epel testing for the newer fedpkg to parse the new sources
 # from https://fedoraproject.org/wiki/ReleaseEngineering/FlagDay2016
