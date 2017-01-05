@@ -45,14 +45,6 @@ components:
 
   - src: github:projectatomic/atomic-devmode
 
-  - src: github:projectatomic/oci-systemd-hook
-    distgit:
-      branch: master
-
-  - src: github:projectatomic/oci-register-machine
-    distgit:
-      branch: master
-
   - src: distgit
     distgit:
       name: python-ipaddress
