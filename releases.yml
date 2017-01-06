@@ -4,8 +4,6 @@
 
 baseref: "centos-atomic-host/7/x86_64/devel/"
 
-# Procedure: When performing an update, be sure to change
-# the previous release commit id in run-treecompose too.
 releases:
-  # Version: 7.2016.1024 (2016-11-29 18:26:12)
-  alpha: c2903d2e61789f8fbe4038fa08897aa1f382743c4f221e91282102a67dcdda68
+  # Version: 7.2017.4 (2017-01-06 17:09:17)
+  alpha: 5d724da9ae10fd584dc2c3c7d5b41fe2a20dc54fe56a44bb362aa72110c67900
