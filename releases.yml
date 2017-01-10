@@ -5,5 +5,5 @@
 baseref: "centos-atomic-host/7/x86_64/devel/"
 
 releases:
-  # Version: 7.2017.6 (2017-01-06 22:07:14)
-  alpha: 020c3cf188e3f493b929fbc107ad15abfb1e5d206b019da230918f850f3ff2e7
+  # Version: 7.2017.15 (2017-01-10 20:39:32)
+  alpha: 5f9345f04d78e1dc1e9c0ee0a71577d6dfbbf5171cfa2f5e12308ece8843620a
