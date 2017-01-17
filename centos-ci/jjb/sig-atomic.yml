@@ -57,7 +57,7 @@
     builders:
       - atomic-duffy-builder:
           task: run-rdgo-rsync
-            
+
     publishers:
       - atomic-trigger-on-change:
           project: 'atomic-treecompose-centos7'
@@ -73,7 +73,7 @@
     builders:
       - atomic-duffy-builder:
           task: run-treecompose
-            
+
     publishers:
       - atomic-trigger-on-change:
           project: 'atomic-installer-centos7'
@@ -93,9 +93,21 @@
           properties-content: OSTREE_BRANCH={branch}
       - atomic-duffy-builder:
           task: run-{imagetask}
-            
+
     publishers:
       - atomic-duffy-publisher
+
+- project:
+    name: atomic-cahc-imagetasks
+    imagetask:
+      - installer
+      - image-cloud
+      - image-pxelive
+    branch:
+      - continuous
+      - alpha
+    jobs:
+      - atomic-cahc-{imagetask}-{branch}
 
 - job-template:
     name: atomic-dockerimage-{distro}-{distrover}
@@ -150,18 +162,8 @@
       - macro-cciskel-duffy-deallocate
 
 - project:
-    name: atomic-rdgo
-    imagetask:
-      - installer
-      - image-cloud
-      - image-pxelive
-    branch:
-      - continuous
-      - alpha
+    name: atomic-dockerimage
     jobs:
-      - atomic-rdgo-centos7
-      - atomic-treecompose-centos7
-      - atomic-cahc-{imagetask}-{branch}
       - atomic-dockerimage-{distro}-{distrover}:
           distro: centos
           distrover: 7
