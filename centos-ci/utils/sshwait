@@ -1,0 +1,42 @@
+#!/bin/bash
+set -euo pipefail
+
+# from https://github.com/jlebon/files/blob/master/bin/sshwait
+
+if [ $# -ne 1 ]; then
+	echo "Usage: $0 <hostname>"
+fi
+
+# If it's already open, then just exit quietly
+if echo | nc -w 500ms $1 22 2>&1 | grep -q SSH; then
+	exit 0
+fi
+
+echo -n "Waiting for open SSH port..."
+while true; do
+
+	out=$(echo | nc -w 1 $1 22 2>&1 || :)
+	if grep -q SSH <<< "$out"; then
+		break
+	fi
+
+	echo -n '.'
+
+	if [[ $out == "Ncat: Connection timed out." ]]; then
+		continue
+	fi
+
+	if [[ $out == "Ncat: Connection refused." ]] || \
+	   [[ $out == "Ncat: No route to host." ]] || \
+	   [[ $out == "Ncat: Connection reset by peer." ]]; then
+		sleep 1
+		continue
+	fi
+
+	echo
+	echo -n "Unknown error: "
+	echo "$out"
+	exit 1
+done
+
+echo " done!"

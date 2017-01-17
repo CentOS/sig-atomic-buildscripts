@@ -1,0 +1,53 @@
+#!/bin/bash
+set -xeuo pipefail
+
+basedir=$(cd $(dirname $0) && pwd)
+. ${basedir}/libtask.sh
+. ${basedir}/libvm.sh
+
+# In this workflow, we just assume that there is a new commit to test (we're
+# triggered only when a new tree is composed). Otherwise, we'll have to figure
+# out where to keep some state.
+
+git clone https://github.com/projectatomic/atomic-host-tests
+
+domain=$(uuidgen | cut -f1 -d-)
+qcow2=/var/lib/libvirt/images/$domain.qcow2
+
+# use alpha rather than downstream so we can use:
+# https://github.com/projectatomic/rpm-ostree/pull/555
+# use http rather than https because:
+# https://lists.centos.org/pipermail/ci-users/2016-July/000301.html
+curl -Lo $qcow2.gz \
+    http://artifacts.ci.centos.org/sig-atomic/centos-continuous/images-alpha/cloud/latest/images/centos-atomic-host-7.qcow2.gz
+gunzip $qcow2.gz
+
+$utils/create-vm $domain $qcow2
+ip=$($utils/get-vm-ip $domain)
+vm_setup $ip
+
+# prepare the VM for the improved-sanity-test: deploy HEAD^
+vm_cmd sed -i -e 's,https://ci.centos.org/artifacts/,http://artifacts.ci.centos.org/,g' \
+  /etc/ostree/remotes.d/centos-atomic-continuous.conf
+vm_cmd ostree pull --commit-metadata-only --depth=1 \
+    centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous
+head=$(vm_cmd ostree rev-parse centos-atomic-host/7/x86_64/devel/continuous)
+oldhead=$(vm_cmd ostree rev-parse centos-atomic-host/7/x86_64/devel/continuous^)
+vm_cmd rpm-ostree rebase centos-atomic-host/7/x86_64/devel/continuous $oldhead
+vm_reboot
+
+export ANSIBLE_HOST_KEY_CHECKING=False
+
+pass=0
+if ansible-playbook -v -i $ip, atomic-host-tests/tests/improved-sanity-test/main.yml; then
+    pass=1
+fi
+
+if [ $pass = 0 ]; then
+    echo "Test failed. See above for output."
+    exit 1
+else
+    echo "Test passed."
+    touch ${BUILD_LOGS}/changed.stamp
+    echo "$head" > ${BUILD_LOGS}/smoketested-rev
+fi

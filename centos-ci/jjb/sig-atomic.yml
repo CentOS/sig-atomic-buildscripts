@@ -71,6 +71,21 @@
       - timed: "H * * * *"
 
     builders:
+      # this is a hack to allow the smoketest to go back
+      # around and tell do-release-tags what to promote
+      - python: |
+          import os
+          import yaml
+          smoketest = os.path.expanduser('~/smoketested-rev')
+          if not os.path.exists(smoketest):
+            exit(0)
+          with open(smoketest) as f:
+            rev = f.read()
+          with open('sig-atomic-buildscripts/releases.yml') as f:
+            releases = yaml.load(f)
+          releases['releases']['smoketested'] = rev
+          with open('sig-atomic-buildscripts/releases.yml', 'w') as f:
+            f.write(yaml.dump(releases))
       - atomic-duffy-builder:
           task: run-treecompose
 
@@ -79,6 +94,26 @@
           project: 'atomic-installer-centos7'
       - atomic-trigger-on-change:
           project: 'atomic-image-cloud-centos7'
+      - atomic-trigger-on-change:
+          project: 'atomic-tree-smoketest-centos7'
+      - atomic-duffy-publisher
+
+- job:
+    name: atomic-tree-smoketest-centos7
+    defaults: atomic-defaults
+
+    # for now, we are only triggered by atomic-treecompose-centos7
+    # because we don't keep any state of *which* commits we've already
+    # tested and which we haven't
+    builders:
+      - atomic-duffy-builder:
+          task: run-tree-smoketest
+      - shell: cp -f build-logs/smoketested-rev ~
+
+    publishers:
+      # retrigger so we run do-release-tags
+      - atomic-trigger-on-change:
+          project: 'atomic-treecompose-centos7'
       - atomic-duffy-publisher
 
 - job-template:

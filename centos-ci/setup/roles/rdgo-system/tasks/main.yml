@@ -44,6 +44,9 @@
     - PyYAML
     - rpmdistro-gitoverlay
     - libgsystem
+    - genisoimage
+    - ansible
+    - virt-install
 
 - service: name={{ item }} state=started
   with_items:
