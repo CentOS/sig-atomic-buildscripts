@@ -1,0 +1,46 @@
+#!/bin/bash
+set -xeuo pipefail
+
+basedir=$(cd $(dirname $0) && pwd)
+
+domain=$1; shift
+qcow2=$1; shift
+
+iso=/var/lib/libvirt/$domain.cidata.iso
+
+if ! [ -f ~/.ssh/id_rsa ]; then
+    ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ''
+fi
+
+pubkey=$(cat ~/.ssh/id_rsa.pub)
+
+cat > meta-data << EOF
+instance-id: $domain
+local-hostname: $domain
+EOF
+
+cat > user-data << EOF
+#cloud-config
+disable_root: 0
+
+users:
+  - name: root
+    lock-passwd: false
+    inactive: false
+    system: false
+    ssh-authorized-keys:
+      - "$pubkey"
+EOF
+
+genisoimage -input-charset default -volid cidata -joliet \
+            -rock -output $iso user-data meta-data
+
+virt-install --import --name $domain --os-variant rhel7 --ram 2048 --vcpus 2 \
+             --disk path=$qcow2,format=qcow2,bus=virtio \
+             --disk path=$iso,device=cdrom,readonly=on \
+             --network network=default --noautoconsole
+
+$basedir/sshwait $($basedir/get-vm-ip $domain 60)
+
+# give cloud-init some time to inject ssh creds
+sleep 5

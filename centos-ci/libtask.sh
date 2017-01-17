@@ -2,6 +2,7 @@ buildscriptsdir=$(cd ~/sig-atomic-buildscripts && pwd)
 build=centos-continuous
 OSTREE_BRANCH=${OSTREE_BRANCH:-continuous}
 ref=centos-atomic-host/7/x86_64/devel/${OSTREE_BRANCH}
+utils=$buildscriptsdir/centos-ci/utils
 
 prepare_job() {
     export WORKSPACE=$HOME/jobs/${JENKINS_JOB_NAME}
