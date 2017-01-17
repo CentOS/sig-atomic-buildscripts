@@ -8,9 +8,9 @@ cd rdgo
 ln -sf ${buildscriptsdir}/overlay.yml .
 if ! test -d src; then
     rpmdistro-gitoverlay init
-fi    
+fi
 
 # Git fetch all the things
 rpmdistro-gitoverlay resolve --fetch-all
 # Do a build
-rpmdistro-gitoverlay build --touch-if-changed ${BUILD_LOGS}/build.stamp --logdir=${BUILD_LOGS}
+rpmdistro-gitoverlay build --touch-if-changed ${BUILD_LOGS}/changed.stamp --logdir=${BUILD_LOGS}

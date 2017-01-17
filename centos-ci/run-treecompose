@@ -18,8 +18,8 @@ fi
 treefile=centos-atomic-host-continuous.json
 # Work around https://lists.centos.org/pipermail/ci-users/2016-July/000302.html
 sed -i -e 's,https://ci.centos.org/artifacts/,http://artifacts.ci.centos.org/,g' ${buildscriptsdir}/atomic-centos-continuous.repo
-sudo rpm-ostree compose tree --touch-if-changed=${WORKSPACE}/treecompose.stamp --repo=ostree/repo ${buildscriptsdir}/${treefile}
-if test -f ${WORKSPACE}/treecompose.stamp; then
+sudo rpm-ostree compose tree --touch-if-changed=${BUILD_LOGS}/changed.stamp --repo=ostree/repo ${buildscriptsdir}/${treefile}
+if test -f ${BUILD_LOGS}/changed.stamp; then
     sudo chown -R -h $USER:$USER ostree/repo
     ostree --repo=ostree/repo summary -u
     rpm-ostree db --repo=ostree/repo diff centos-atomic-host/7/x86_64/devel/continuous{^,}
