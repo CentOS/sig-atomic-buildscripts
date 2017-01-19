@@ -32,6 +32,7 @@ users:
       - "$pubkey"
 EOF
 
+sudo \
 genisoimage -input-charset default -volid cidata -joliet \
             -rock -output $iso user-data meta-data
 
@@ -40,7 +41,7 @@ virt-install --import --name $domain --os-variant rhel7 --ram 2048 --vcpus 2 \
              --disk path=$iso,device=cdrom,readonly=on \
              --network network=default --noautoconsole
 
-$basedir/sshwait $($basedir/get-vm-ip $domain 60)
+timeout -s9 2m $basedir/sshwait $($basedir/get-vm-ip $domain 60)
 
 # give cloud-init some time to inject ssh creds
 sleep 5
