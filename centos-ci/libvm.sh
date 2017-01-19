@@ -1,5 +1,7 @@
 # Based on projectatomic/rpm-ostree libvm.sh
 
+export LIBVIRT_DEFAULT_URI=qemu:///system
+
 vm_setup() {
     ip=$1; shift
     SSH="ssh -o UserKnownHostsFile=/dev/null \

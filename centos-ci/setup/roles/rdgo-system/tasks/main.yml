@@ -60,7 +60,7 @@
     - "config_opts['plugin_conf']['tmpfs_enable'] = True"
     - "config_opts['use_nspawn'] = True"
 
-- user: name={{ item }} groups=mock,wheel
+- user: name={{ item }} groups=mock,wheel,libvirt
   with_items:
     - builder
     - prbuilder
