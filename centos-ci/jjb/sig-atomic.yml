@@ -80,7 +80,7 @@
           if not os.path.exists(smoketest):
             exit(0)
           with open(smoketest) as f:
-            rev = f.read()
+            rev = f.read().strip()
           with open('sig-atomic-buildscripts/releases.yml') as f:
             releases = yaml.load(f)
           releases['releases']['smoketested'] = rev
