@@ -9,7 +9,7 @@ for v in ostree; do
 done
 
 # Update release tags
-~/ostree-releng-scripts/do-release-tags --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
+~/ostree-releng-scripts/do-release-tags --autocreate --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
 # Now, ensure we have a delta from N-1 -> N
 if ostree --repo=ostree/repo rev-parse centos-atomic-host/7/x86_64/devel/alpha^ 2>/dev/null; then
     ostree --repo=ostree/repo static-delta generate -n centos-atomic-host/7/x86_64/devel/alpha
