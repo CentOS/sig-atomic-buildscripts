@@ -17,7 +17,11 @@
           EOF
           cat task.env
 
-          rsync -Hrlptv --stats -e ssh task.env sig-atomic-buildscripts ostree-releng-scripts rsync-password.sh builder@${{DUFFY_HOST}}:
+          rsync -Hrlptv --stats -e ssh task.env rsync-password.sh builder@${{DUFFY_HOST}}:
+          for repo in sig-atomic-buildscripts ostree-releng-scripts; do
+            rsync -Hrlptv --stats --delete -e ssh $repo/ builder@${{DUFFY_HOST}}:$repo
+          done
+
           build_success=true
           if ! ssh -tt builder@${{DUFFY_HOST}} '. task.env && ./sig-atomic-buildscripts/centos-ci/{task}'; then
             build_success=false
