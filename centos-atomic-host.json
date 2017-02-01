@@ -14,7 +14,8 @@
     "documentation": false,
 
     "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
-
+    "automatic_version_prefix": "7.20170201", 
+    "mutate-os-release": "7", 
     "postprocess-script": "treecompose-post.sh",
 
     "etc-group-members": ["wheel", "docker"],
@@ -79,7 +80,8 @@
 		 "docker-lvm-plugin",
 		 "docker-novolume-plugin",
                  "ceph-common", "device-mapper-multipath",
-                 "sg3_utils", "glusterfs-fuse"],
+                 "sg3_utils", "glusterfs-fuse",
+                 "gomtree"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
 			     ["filesystem", "/usr/share/backgrounds"],
