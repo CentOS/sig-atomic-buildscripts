@@ -55,7 +55,7 @@
 
 # nspawn is better, also https://lists.fedoraproject.org/pipermail/buildsys/2015-July/004833.html
 # Also https://bugzilla.redhat.com/show_bug.cgi?id=1328212
-- lineinfile: dest=/etc/mock/site-defaults.cfg "line={{ item }}"
+- lineinfile: dest=/etc/mock/site-defaults.cfg line={{ item }}
   with_items:
     - "config_opts['plugin_conf']['tmpfs_enable'] = True"
     - "config_opts['use_nspawn'] = True"
