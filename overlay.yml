@@ -29,9 +29,6 @@ cache:
   buildserial: 0
 
 components:
-  - distgit: go-srpm-macros
-    srpmroot: true
-
   - src: github:projectatomic/centos-release-atomic-host-devel
     spec: internal
 
@@ -54,41 +51,8 @@ components:
     distgit:
       name: python-docker-py
 
-  - distgit: go-compilers
-
-  - src: distgit
-    distgit:
-      name: golang
-      # This just contains https://bugzilla.redhat.com/show_bug.cgi?id=1342329
-      src: https://gitlab.com/cgwalters/golang-rpm-package.git
-      branch: master
-
-  # Dependency of atomic
-  - src: distgit
-    distgit:
-      name: golang-googlecode-go-crypto
-      branch: master
-  - src: distgit
-    distgit:
-      name: gomtree
-
-  - src: github:projectatomic/atomic
-    distgit:
-      branch: master
-
-  - src: github:projectatomic/skopeo
-    # repo priorities aren't wired up in libhif right now
-    override-version: "1.14"
-    distgit:
-      branch: master
-      patches: drop
-
   # https://bugzilla.redhat.com/show_bug.cgi?id=1288162#c8
   - distgit: xfsprogs
-
-  - distgit: runc
-
-  - distgit: etcd
 
   # only needed for toolbox now
   - src: gnome:libgsystem
@@ -115,8 +79,6 @@ components:
 
   - src: github:cgwalters/micro-yuminst.git
     spec: internal
-
-  - distgit: kubernetes
 
   # https://bugzilla.redhat.com/show_bug.cgi?id=1330753
   # http://pkgs.fedoraproject.org/cgit/rpms/libtasn1.git/commit/?h=f24&id=4802fcbdd83bfbfd6d37474e65363e2ff615c163
