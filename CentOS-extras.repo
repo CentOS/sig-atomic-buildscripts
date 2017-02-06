@@ -6,4 +6,4 @@ gpgcheck=0
 gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
 # List excludes here that have higher versions due to missing git tags, until we implement
 # priorities: https://github.com/CentOS/sig-atomic-buildscripts/issues/138
-exclude=cloud-utils-growpart atomic skopeo
+exclude=cloud-utils-growpart
