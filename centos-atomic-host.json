@@ -14,7 +14,7 @@
     "documentation": false,
 
     "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
-    "automatic_version_prefix": "7.20170201", 
+    "automatic_version_prefix": "7.20170209", 
     "mutate-os-release": "7", 
     "postprocess-script": "treecompose-post.sh",
 
