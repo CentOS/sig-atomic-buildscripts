@@ -145,6 +145,7 @@
       - image-pxelive
     branch:
       - continuous
+      - smoketested
       - alpha
     jobs:
       - atomic-cahc-{imagetask}-{branch}
