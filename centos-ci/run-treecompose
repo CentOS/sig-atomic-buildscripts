@@ -24,7 +24,7 @@ if test -f ${BUILD_LOGS}/changed.stamp; then
     ostree --repo=ostree/repo summary -u
     rpm-ostree db --repo=ostree/repo diff centos-atomic-host/7/x86_64/devel/continuous{^,}
     ostree --repo=ostree/repo static-delta generate centos-atomic-host/7/x86_64/devel/continuous
-    ostree --repo=ostree/repo prune --keep-younger-than='30 days ago' --refs-only
+    ostree --repo=ostree/repo prune --retain-branch-depth=centos-atomic-host/7/x86_64/devel/alpha=-1 --keep-younger-than='30 days ago' --refs-only
 fi
 
 # Always regenerate this right now since otherwise we have to track
