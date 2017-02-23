@@ -142,7 +142,6 @@
     imagetask:
       - installer
       - image-cloud
-      - image-pxelive
     branch:
       - continuous
       - smoketested
