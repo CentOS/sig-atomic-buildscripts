@@ -23,6 +23,6 @@
 [CentOS-CR]
 name=CentOS-7 - cr
 baseurl=http://mirror.centos.org/centos/7/cr/$basearch/
-gpgcheck=1
+gpgcheck=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 enabled=0
