@@ -29,9 +29,8 @@
   with_items:
     - https://kojipkgs.fedoraproject.org//packages/python-distro/1.0.1/2.el7/noarch/python2-distro-1.0.1-2.el7.noarch.rpm
 
-# We need epel testing for the newer fedpkg to parse the new sources
-# from https://fedoraproject.org/wiki/ReleaseEngineering/FlagDay2016
-- yum: name={{ item }} state=latest enablerepo=epel-testing
+# Disable epel testing to work around https://bodhi.fedoraproject.org/updates/FEDORA-EPEL-2017-6fb8d59d10
+- yum: name={{ item }} state=latest disablerepo=epel-testing
   with_items:
     - rsync
     - mock
