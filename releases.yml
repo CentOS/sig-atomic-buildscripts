@@ -1,9 +1,17 @@
-# This file defines promoted releases from continuous -> alpha, and
+# This file defines promoted releases from smoketested -> alpha, and
 # possibly in the future from alpha -> beta.  You can think of this
 # as simply a declarative way to manage ostree commits.  See `do-release-tags`.
+
+# To create a new release, find the latest tip of centos-atomic-host/7/x86_64/devel/smoketested;
+# I typically do this from inside a VM, so I can test it interactively too:
+# $ rpm-ostree rebase centos-atomic-host/7/x86_64/devel/smoketested
+# $ ostree show  centos-atomic-host/7/x86_64/devel/smoketested
+#
+# Then, edit the commit hash and version, and update both below.
 
 baseref: "centos-atomic-host/7/x86_64/devel/"
 
 releases:
-  # Version: 7.2017.109 (2017-02-15 20:31:49)
-  alpha: 1e34ab485ed308d19e0064ccf73540ed5a8e0ce47933ff21b557e86b227674a7
+  # Date:  2017-03-01 19:20:50 +0000
+  # Version: 7.2017.141
+  alpha: 6097af9f10cbab877d8c9e3689271dfd58c317f1d6084535bf1fc2ba9e9ef24f
