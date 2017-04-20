@@ -62,10 +62,6 @@ fi
 
 ostree remote add --repo=/srv/repo centos-atomic-host --set=gpg-verify=false http://mirror.centos.org/centos/7/atomic/x86_64/repo && ostree pull --depth=-1 --repo=/srv/repo --mirror centos-atomic-host centos-atomic-host/7/x86_64/standard
 
-# temp fix for issue 259
-
-ostree --repo=/srv/repo static-delta generate --from d433342b09673c9c4d75ff6eef50a447e73a7541491e5197e1dde14147b164b8 --to 841fae51e5b68716a9996ddbdb4e543855bbfab9c6e4cb433267b24e41e8bbc1 && ostree --repo=/srv/repo summary -u
-
 ## compose a new tree, based on defs in centos-atomic-host.json
 
 rpm-ostree compose --repo=${OstreeRepoDir} tree ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
