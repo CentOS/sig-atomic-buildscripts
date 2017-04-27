@@ -1,5 +1,6 @@
 #!/bin/bash
 set -xeuo pipefail
+refprefix=centos-atomic-host/7/x86_64/devel
 basedir=$(cd $(dirname $0) && pwd)
 . ${basedir}/libtask.sh
 . ${basedir}/libtoolbox.sh
@@ -10,9 +11,12 @@ done
 
 # Update release tags
 ~/ostree-releng-scripts/do-release-tags --autocreate --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
-# Now, ensure we have a delta from N-1 -> N
-if ostree --repo=ostree/repo rev-parse centos-atomic-host/7/x86_64/devel/alpha^ 2>/dev/null; then
-    ostree --repo=ostree/repo static-delta generate -n centos-atomic-host/7/x86_64/devel/alpha
+smoketested_commit=$(ostree --repo=ostree/repo rev-parse ${refprefix}/smoketested)
+# Reset alpha to the latest smoketested; see https://github.com/CentOS/sig-atomic-buildscripts/issues/269
+~/ostree-releng-scripts/write-ref --ref ${refprefix}/alpha ${smoketested_commit}
+# Generate a delta for smoketested
+if ostree --repo=ostree/repo rev-parse ${refprefix}/smoketested^ 2>/dev/null; then
+    ostree --repo=ostree/repo static-delta generate -n ${refprefix}/smoketested
 fi
 
 treefile=centos-atomic-host-continuous.json
@@ -24,7 +28,7 @@ if test -f ${BUILD_LOGS}/changed.stamp; then
     ostree --repo=ostree/repo summary -u
     rpm-ostree db --repo=ostree/repo diff centos-atomic-host/7/x86_64/devel/continuous{^,}
     ostree --repo=ostree/repo static-delta generate centos-atomic-host/7/x86_64/devel/continuous
-    ostree --repo=ostree/repo prune --retain-branch-depth=centos-atomic-host/7/x86_64/devel/alpha=-1 --keep-younger-than='30 days ago' --refs-only
+    ostree --repo=ostree/repo prune --retain-branch-depth=centos-atomic-host/7/x86_64/devel/smoketested=5 --keep-younger-than='30 days ago' --refs-only
 fi
 
 # Always regenerate this right now since otherwise we have to track
