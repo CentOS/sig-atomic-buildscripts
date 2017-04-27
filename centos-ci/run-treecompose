@@ -13,7 +13,7 @@ done
 ~/ostree-releng-scripts/do-release-tags --autocreate --repo=ostree/repo --releases=${buildscriptsdir}/releases.yml
 smoketested_commit=$(ostree --repo=ostree/repo rev-parse ${refprefix}/smoketested)
 # Reset alpha to the latest smoketested; see https://github.com/CentOS/sig-atomic-buildscripts/issues/269
-~/ostree-releng-scripts/write-ref --ref ${refprefix}/alpha ${smoketested_commit}
+ostree --repo=ostree/repo reset ${refprefix}/alpha ${refprefix}/smoketested
 # Generate a delta for smoketested
 if ostree --repo=ostree/repo rev-parse ${refprefix}/smoketested^ 2>/dev/null; then
     ostree --repo=ostree/repo static-delta generate -n ${refprefix}/smoketested
