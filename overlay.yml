@@ -60,10 +60,7 @@ components:
       patches: drop
 
   - src: github:ostreedev/ostree
-    # https://github.com/ostreedev/ostree/issues/867
-    freeze: d815ba2a81ad14d9d4edc31dcd282dcc2a3a8fb9
     distgit:
-      freeze: e53dfee2a1e92839a1243a93675ea17cd7847fea
       branch: master
       patches: drop
 
