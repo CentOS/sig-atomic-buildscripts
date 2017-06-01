@@ -39,7 +39,11 @@ cd ${BuildDir}
 cp -f ${GitDir}/rhel-atomic-rebuild.repo /etc/yum.repos.d/
 yum -y install ostree rpm-ostree glib2 docker libvirt epel-release libgsystem
 
-cp -f ${GitDir}/atomic7-testing.repo /etc/yum.repos.d/
+
+if [ -f ${GitDir}/atomic7-testing.repo ]; then
+   mv ${GitDir}/atomic7-testing.repo /etc/yum.repos.d/
+fi
+
 echo 'enabled=0' >> /etc/yum.repos.d/atomic7-testing.repo
 yum --enablerepo=atomic7-testing -y install rpm-ostree-toolbox
 
