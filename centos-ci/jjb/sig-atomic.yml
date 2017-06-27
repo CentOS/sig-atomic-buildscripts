@@ -200,13 +200,3 @@
           artifacts: '{distro}min-{distrover}.tar.gz'
           allow-empty: 'true'
       - macro-cciskel-duffy-deallocate
-
-- project:
-    name: atomic-dockerimage
-    jobs:
-      - atomic-dockerimage-{distro}-{distrover}:
-          distro: centos
-          distrover: 7
-      - atomic-dockerimage-{distro}-{distrover}:
-          distro: fedora
-          distrover: 24
