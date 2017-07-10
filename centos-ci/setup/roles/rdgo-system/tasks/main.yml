@@ -34,6 +34,7 @@
   with_items:
     - rsync
     - mock
+    - distribution-gpg-keys
     - libsolv
     - glib2
     - ostree
