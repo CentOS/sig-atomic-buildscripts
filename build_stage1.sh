@@ -73,6 +73,8 @@ rpm-ostree compose --repo=${OstreeRepoDir} tree ${GitDir}/centos-atomic-host.jso
 # deal with https://bugzilla.gnome.org/show_bug.cgi?id=748959
 
 chmod -R a+r /srv/repo/objects
+find /srv/repo/ -type d -exec chmod -R a+x {} \;
+find /srv/repo/ -type f -exec chmod -R a+r {} \;
 
 echo 'Stage-1 done, you can now sign the repo, or just run stage2 '
 
