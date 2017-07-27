@@ -70,6 +70,7 @@ components:
   - distgit: libsolv
 
   - src: github:projectatomic/rpm-ostree
+    freeze: d66917df7cc85fdaf7d2edee59f6c5e7e6f380de
     distgit:
       branch: master
       patches: drop
