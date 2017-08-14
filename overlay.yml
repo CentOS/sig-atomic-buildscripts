@@ -38,8 +38,6 @@ components:
     spec: internal
 
   - src: github:projectatomic/bubblewrap
-    # https://github.com/projectatomic/rpm-ostree/issues/855
-    freeze: v0.1.8
     spec: internal
 
   - src: github:projectatomic/atomic-devmode
