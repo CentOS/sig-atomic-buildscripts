@@ -6,7 +6,6 @@ timezone --utc Etc/UTC
 auth --useshadow --passalgo=sha512
 selinux --enforcing
 rootpw --lock --iscrypted locked
-user --name=none
 
 firewall --disabled
 
@@ -18,7 +17,7 @@ services --enabled=sshd,rsyslog,cloud-init,cloud-init-local,cloud-config,cloud-f
 services --disabled=network,avahi-daemon
 
 zerombr
-clearpart --all
+clearpart --initlabel --all
 
 part /boot --size=300 --fstype="xfs"
 part pv.01 --grow
@@ -52,7 +51,7 @@ truncate -s 0 /etc/resolv.conf
 # https://bugzilla.redhat.com/show_bug.cgi?id=964299
 passwd -l root
 # remove the user anaconda forces us to make
-userdel -r none
+#userdel -r none
 
 # If you want to remove rsyslog and just use journald, remove this!
 echo -n "Disabling persistent journal"
@@ -84,7 +83,8 @@ DEVICE="eth0"
 BOOTPROTO="dhcp"
 ONBOOT="yes"
 TYPE="Ethernet"
-PERSISTENT_DHCLIENT="yes"
+PiERSISTENT_DHCLIENT="yes"
+NM_CONTROLLED="yes"
 EOF
 
 # generic localhost names
@@ -129,5 +129,14 @@ rm -f /var/lib/rpm/__db*
 echo "Adding devmode GRUB2 menu item"
 /usr/libexec/atomic-devmode/bootentry add
 
+# Anaconda is writing a /etc/resolv.conf from the generating environment.
+# The system should start out with an empty file.
+truncate -s 0 /etc/resolv.conf
+ 
+# clean-up
+echo "Removing random-seed so it's not the same in every image."
+rm -f /var/lib/random-seed
+ 
+echo "Removing /root/anaconda-ks.cfg"
+rm -f /root/anaconda-ks.cfg
 %end
-

@@ -59,7 +59,7 @@
     "documentation": false,
 
     "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
-    "automatic_version_prefix": "7.1707",
+    "automatic_version_prefix": "7.1708",
     "mutate-os-release": "7", 
     "postprocess-script": "treecompose-post.sh",
 
@@ -126,7 +126,8 @@
 		 "docker-novolume-plugin",
                  "ceph-common", "device-mapper-multipath",
                  "sg3_utils", "glusterfs-fuse",
-                 "gomtree"],
+                 "gomtree",
+                 "cronie", "dnsmasq", "oci-umount"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
 			     ["filesystem", "/usr/share/backgrounds"],
