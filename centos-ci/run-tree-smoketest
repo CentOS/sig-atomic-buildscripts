@@ -24,6 +24,11 @@ $utils/create-vm $domain $qcow2
 ip=$($utils/get-vm-ip $domain)
 vm_setup $ip
 
+# use http rather than https (just in case) because:
+# https://lists.centos.org/pipermail/ci-users/2016-July/000301.html
+vm_cmd sed -i -e 's,https://ci.centos.org/artifacts/,http://artifacts.ci.centos.org/,g' \
+    /etc/ostree/remotes.d/centos-atomic-continuous.conf
+
 export ANSIBLE_HOST_KEY_CHECKING=False
 
 pass=0
