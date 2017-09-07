@@ -3,9 +3,16 @@ toolbox_base_args="-c ${buildscriptsdir}/config.ini --ostreerepo http://artifact
 prepare_image_build() {
     imgtype=$1
 
+    if test ${OSTREE_BRANCH} = "continuous"; then
+        buildloc=${build}/images
+    else
+        buildloc=${build}/images-${OSTREE_BRANCH}
+    fi
+
     # sudo since -toolbox might have leftover files as root if interrupted
-    sudo rm ${build}/images -rf
-    mkdir -p ${build}/images/${imgtype}
+    sudo rm ${buildloc} -rf
+    mkdir -p ${buildloc}/${imgtype}
+
     cd ${build}
 
     if ! test -d repo; then
@@ -19,11 +26,7 @@ prepare_image_build() {
     rev=$(ostree --repo=repo rev-parse ${ref})
     version=$(ostree --repo=repo show --print-metadata-key=version ${ref} | sed -e "s,',,g")
 
-    if test ${OSTREE_BRANCH} = "continuous"; then
-        imgloc=sig-atomic/${build}/images/${imgtype}
-    else
-        imgloc=sig-atomic/${build}/images-${OSTREE_BRANCH}/${imgtype}
-    fi
+    imgloc=sig-atomic/${buildloc}/${imgtype}
 
     if curl -L --head -f http://artifacts.ci.centos.org/${imgloc}/${version}/; then
         echo "Image ${imgtype} at version ${version} already exists"
