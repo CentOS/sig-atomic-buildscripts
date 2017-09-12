@@ -131,7 +131,7 @@
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
 			     ["filesystem", "/usr/share/backgrounds"],
-                             ["centos-logos", "/usr/share/backgrounds",
+                             ["/usr/share/backgrounds",
                                               "/usr/share/kde4",
                                               "/usr/share/anaconda"]],
 
