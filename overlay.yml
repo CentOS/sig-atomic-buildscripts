@@ -51,9 +51,6 @@ components:
     distgit:
       name: python-docker-py
 
-  # https://bugzilla.redhat.com/show_bug.cgi?id=1288162#c8
-  - distgit: xfsprogs
-
   # only needed for toolbox now
   - src: gnome:libgsystem
     distgit: 
@@ -79,19 +76,3 @@ components:
 
   - src: github:cgwalters/micro-yuminst.git
     spec: internal
-
-  # https://bugzilla.redhat.com/show_bug.cgi?id=1330753
-  # http://pkgs.fedoraproject.org/cgit/rpms/libtasn1.git/commit/?h=f24&id=4802fcbdd83bfbfd6d37474e65363e2ff615c163
-  - distgit: libtasn1
-
-  # The new thin_ls command is nice
-  # https://bugzilla.redhat.com/show_bug.cgi?id=1228593
-  - distgit: device-mapper-persistent-data
-
-  - distgit: cpio
-
-  - src: distgit
-    distgit:
-      name: dracut
-      branch: master
-      src: github:giuseppe/dracut-cahc-distgit
