@@ -64,10 +64,11 @@ components:
   # libdnf needs a newer version than Core
   - distgit: libsolv
 
-  - src: github:projectatomic/rpm-ostree
-    distgit:
-      branch: master
-      patches: drop
+  # undo immediately after
+  # - src: github:projectatomic/rpm-ostree
+  #   distgit:
+  #     branch: master
+  #     patches: drop
 
   - src: github:projectatomic/rpm-ostree-toolbox
     distgit:
