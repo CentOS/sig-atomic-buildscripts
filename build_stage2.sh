@@ -21,6 +21,10 @@ cd ${BuildDir}
 systemctl start docker
 systemctl start libvirtd
 
+## increase memory for imagefactory vm to 3GB
+
+sed -i '/memory/c\memory = 3072' /etc/oz/oz.cfg
+
 ## This part creates an install tree and install iso 
 
 echo '---------- installer ' >> ${LogFile}
