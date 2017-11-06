@@ -28,6 +28,7 @@ vm_setup $ip
 # https://lists.centos.org/pipermail/ci-users/2016-July/000301.html
 vm_cmd sed -i -e 's,https://ci.centos.org/artifacts/,http://artifacts.ci.centos.org/,g' \
     /etc/ostree/remotes.d/centos-atomic-continuous.conf
+head=$(vm_cmd ostree rev-parse centos-atomic-host/7/x86_64/devel/continuous)
 
 export ANSIBLE_HOST_KEY_CHECKING=False
 
