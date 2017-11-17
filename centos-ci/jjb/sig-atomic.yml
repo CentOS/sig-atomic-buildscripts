@@ -96,10 +96,6 @@
 
     publishers:
       - atomic-trigger-on-change:
-          project: 'atomic-installer-centos7'
-      - atomic-trigger-on-change:
-          project: 'atomic-image-cloud-centos7'
-      - atomic-trigger-on-change:
           project: 'atomic-tree-smoketest-centos7'
       - atomic-duffy-publisher
 
