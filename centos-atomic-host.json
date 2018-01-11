@@ -74,7 +74,7 @@
                  "shadow-utils", "centos-release-atomic",
                  "atomic",
                  "runc",
-		 "systemd", "kernel", "rpm-ostree-client",
+		             "systemd", "kernel", "microcode_ctl", "rpm-ostree-client",
 		 "dracut-network",
 		 "biosdevname",
 		 "coreutils",
