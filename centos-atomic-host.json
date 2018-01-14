@@ -118,6 +118,7 @@
 		 "cockpit-shell",
 		 "cockpit-bridge",
                  "cockpit-docker",
+                 "cockpit-networkmanager",
                  "cockpit-ostree",
 		 "setools-console",
                  "device-mapper-multipath",
