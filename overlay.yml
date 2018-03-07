@@ -59,6 +59,7 @@ components:
   - src: github:ostreedev/ostree
     distgit:
       branch: master
+      freeze: 5133df27463af7aa6523ef26b4ad9d3a6ebdab0b
       patches: drop
 
   # libdnf needs a newer version than Core
