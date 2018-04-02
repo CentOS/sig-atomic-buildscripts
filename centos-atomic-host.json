@@ -59,7 +59,7 @@
     "documentation": false,
 
     "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
-    "automatic_version_prefix": "7.1802",
+    "automatic_version_prefix": "7.1803",
     "mutate-os-release": "7", 
     "postprocess-script": "treecompose-post.sh",
 
@@ -74,7 +74,7 @@
                  "shadow-utils", "centos-release-atomic",
                  "atomic",
                  "runc",
-		             "systemd", "kernel", "microcode_ctl", "rpm-ostree-client",
+		 "systemd", "kernel", "microcode_ctl", "rpm-ostree-client",
 		 "dracut-network",
 		 "biosdevname",
 		 "coreutils",
