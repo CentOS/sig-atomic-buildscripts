@@ -39,6 +39,7 @@ reboot
 # Configure docker-storage-setup to resize the partition table on boot
 # https://github.com/projectatomic/docker-storage-setup/pull/25
 echo 'GROWPART=true' > /etc/sysconfig/docker-storage-setup
+echo 'ROOT_SIZE=+100%FREE' >> /etc/sysconfig/docker-storage-setup
 
 # Work around https://bugzilla.redhat.com/show_bug.cgi?id=1193590
 cp /etc/skel/.bash* /var/roothome
