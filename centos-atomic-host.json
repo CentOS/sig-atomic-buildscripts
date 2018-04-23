@@ -16,8 +16,7 @@
         "cronie",
         "oci-umount",
         "redhat-logos",
-        "firewalld",
-        "podman"
+        "firewalld"
     ],
 
     "repos": [
