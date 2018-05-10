@@ -5,7 +5,7 @@
 # Broadly speaking, dependencies are pulled from Fedora 23, and we
 # track git master for things we are actively developing.
 
-aliases: 
+aliases:
   - name: github
     url: https://github.com/
     cacertpath: certs/DigiCertSHA2ExtendedValidationServerCA.pem
@@ -21,7 +21,7 @@ aliases:
 distgit:
   prefix: fedorapkgs
   branch: f24
-  
+
 root:
   mock: centos-7-and-extras-$arch.cfg
 
@@ -53,7 +53,7 @@ components:
 
   # only needed for toolbox now
   - src: gnome:libgsystem
-    distgit: 
+    distgit:
       patches: drop
 
   - src: github:ostreedev/ostree
@@ -76,3 +76,16 @@ components:
 
   - src: github:cgwalters/micro-yuminst.git
     spec: internal
+
+  - src: github:projectatomic/docker
+    override-version: "1.13.1"
+    branch: docker-1.13.1-rhel
+    distgit:
+      branch: master
+
+  # NOTE: master=1.11.0 which requires a different spec
+  - src: github:kubernetes-incubator/cri-o
+    override-version: "1.10.1"
+    branch: release-1.10
+    distgit:
+      branch: master
