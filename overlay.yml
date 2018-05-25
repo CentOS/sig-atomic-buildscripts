@@ -61,6 +61,9 @@ components:
       branch: master
       patches: drop
 
+  # Ensures we're more "self hosting"
+  - distgit: nss-altfiles
+
   # libdnf needs a newer version than Core
   - distgit: libsolv
 
