@@ -32,29 +32,10 @@ components:
   - src: github:projectatomic/centos-release-atomic-host-devel
     spec: internal
 
-  # Keeping this around for a while to have a convenient
-  # repository to test Homu/PRs etc.
-  - src: github:cgwalters/playground
-    spec: internal
-
   - src: github:projectatomic/bubblewrap
     spec: internal
 
   - src: github:projectatomic/atomic-devmode
-
-  - src: distgit
-    distgit:
-      name: python-ipaddress
-      branch: master
-
-  - src: distgit
-    distgit:
-      name: python-docker-py
-
-  # only needed for toolbox now
-  - src: gnome:libgsystem
-    distgit: 
-      patches: drop
 
   - src: github:ostreedev/ostree
     distgit:
@@ -71,11 +52,3 @@ components:
     distgit:
       branch: master
       patches: drop
-
-  - src: github:projectatomic/rpm-ostree-toolbox
-    distgit:
-      branch: master
-      patches: drop
-
-  - src: github:cgwalters/micro-yuminst.git
-    spec: internal
