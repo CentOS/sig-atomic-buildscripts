@@ -20,7 +20,7 @@ aliases:
 
 distgit:
   prefix: fedorapkgs
-  branch: f24
+  branch: f28
   
 root:
   mock: centos-7-and-extras-$arch.cfg
@@ -44,9 +44,6 @@ components:
 
   # Ensures we're more "self hosting"
   - distgit: nss-altfiles
-
-  # libdnf needs a newer version than Core
-  - distgit: libsolv
 
   - src: github:projectatomic/rpm-ostree
     distgit:
