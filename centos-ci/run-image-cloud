@@ -5,10 +5,17 @@ basedir=$(cd $(dirname $0) && pwd)
 . ${basedir}/libtoolbox.sh
 
 prepare_image_build cloud
+
+copy_ppms() {
+    find /var/lib/oz/screenshots -name '*.ppm' | xargs -r -I{} cp {} $BUILD_LOGS
+}
+trap copy_ppms ERR
+
 # FIXME - use ISO content rather than KS
 sudo rpm-ostree-toolbox imagefactory ${toolbox_base_args} -i kvm -i vagrant-libvirt -i vagrant-virtualbox --preserve-ks-url \
      --tdl ${buildscriptsdir}/cahc.tdl \
      -k ${buildscriptsdir}/cloud.ks \
      --vkickstart ${buildscriptsdir}/vagrant.ks \
      -o ${version} --overwrite
+
 finish_image_build cloud
