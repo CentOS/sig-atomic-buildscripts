@@ -68,11 +68,12 @@ ostree remote add --repo=/srv/repo centos-atomic-host --set=gpg-verify=false htt
 
 ## compose a new tree, based on defs in centos-atomic-host.json
 
-rpm-ostree compose --repo=${OstreeRepoDir} tree --touch-if-changed=${BuildDir}/changed.stamp ${GitDir}/c
+rpm-ostree compose --repo=${OstreeRepoDir} tree --touch-if-changed=${BuildDir}/changed.stamp ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
 
 ## stop the script unless a new commit has been made
 
 if ! test -f ${BuildDir}/changed.stamp; then
+   echo "No changes, will not proceed."
    exit 1
 else
    rm ${BuildDir}/changed.stamp
