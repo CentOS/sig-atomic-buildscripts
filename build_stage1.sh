@@ -70,6 +70,10 @@ ostree remote add --repo=/srv/repo centos-atomic-host --set=gpg-verify=false htt
 
 rpm-ostree compose --repo=${OstreeRepoDir} tree ${GitDir}/centos-atomic-host.json |& tee ${BuildDir}/log.compose
 
+## stop the script unless a new commit has been made
+
+cat ${BuildDir}/log.compose | grep -q "Wrote commit"
+
 # deal with https://bugzilla.gnome.org/show_bug.cgi?id=748959
 
 chmod -R a+r /srv/repo/objects
