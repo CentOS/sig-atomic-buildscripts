@@ -13,6 +13,7 @@ trap copy_ppms ERR
 
 # override oz config to at least 3G
 # FIXME - this should probably be an rpm-ostree-toolbox setting
+sudo sed -i 's/ *# *memory *= */memory = /' /etc/oz/oz.cfg # uncomment first
 sudo sed -i 's/memory = .*/memory = 3072/' /etc/oz/oz.cfg
 
 # FIXME - use ISO content rather than KS
