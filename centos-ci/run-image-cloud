@@ -11,6 +11,10 @@ copy_ppms() {
 }
 trap copy_ppms ERR
 
+# override oz config to at least 3G
+# FIXME - this should probably be an rpm-ostree-toolbox setting
+sudo sed -i 's/memory = .*/memory = 3072/' /etc/oz/oz.cfg
+
 # FIXME - use ISO content rather than KS
 sudo rpm-ostree-toolbox imagefactory ${toolbox_base_args} -i kvm -i vagrant-libvirt -i vagrant-virtualbox --preserve-ks-url \
      --tdl ${buildscriptsdir}/cahc.tdl \
