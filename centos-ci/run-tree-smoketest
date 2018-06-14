@@ -32,6 +32,28 @@ head=$(vm_cmd ostree rev-parse centos-atomic-host/7/x86_64/devel/continuous)
 
 export ANSIBLE_HOST_KEY_CHECKING=False
 
+# The 'smoketest' job was failing while trying to copy files from the host
+# under test to the host running Ansible.  The following error was observed:
+#
+#   Authentication or permission failure. In some cases, you may have been
+#   able to authenticate and did not have permissions on the target directory.
+#   Consider changing the remote tmp path in ansible.cfg to a path rooted
+#   in "/tmp". Failed command was: ( umask 77 &&
+#   mkdir -p "` echo /root/.ansible/tmp/ansible-tmp-1527796579.81-233460530664079 `" &&
+#   echo ansible-tmp-1527796579.81-233460530664079="`
+#   echo /root/.ansible/tmp/ansible-tmp-1527796579.81-233460530664079 `" ),
+#   exited with result 1
+#
+# Unfortunately, there doesn't seem to be an environment variable to configure
+# the remote temp directory, so we'll create an `ansible.cfg` file to use
+# for the sanity test.  As long as it lives in the current directory,
+# Ansible should pick it up and use it.
+#
+# https://davesnigier.com/changing-ansible-temporary-directory/
+cat <<EOF > ./ansible.cfg
+remote_tmp = /tmp/.ansible-${USER}/tmp/
+EOF
+
 pass=0
 if ansible-playbook -v -i $ip, -u root \
     atomic-host-tests/tests/improved-sanity-test/main.yml; then
