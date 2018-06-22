@@ -15,7 +15,7 @@ bootloader --timeout=1 --append="no_timer_check console=tty1 console=ttyS0,11520
 network --bootproto=dhcp --onboot=on
 # We use NetworkManager, and Avahi doesn't make much sense in the cloud
 services --disabled=network,avahi-daemon
-services --enabled=NetworkManager,sshd,rsyslog,cloud-init,cloud-init-local,cloud-config,cloud-final
+services --enabled=NetworkManager,sshd,cloud-init,cloud-init-local,cloud-config,cloud-final
 
 zerombr
 clearpart --all
