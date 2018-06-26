@@ -122,7 +122,9 @@
 		 "setools-console",
                  "device-mapper-multipath",
                  "sg3_utils",
-                 "attr"],
+                 "attr",
+		 "firewalld",
+		 "podman"],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
 			     ["kernel", "/lib/modules/.*/drivers/gpu"],
