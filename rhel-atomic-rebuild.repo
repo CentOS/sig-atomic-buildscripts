@@ -1,5 +1,5 @@
 [rhel-atomic-rebuild]
 name=rhel-atomic-rebuild
-baseurl=http://buildlogs.centos.org/centos/7/atomic/x86_64/Packages/
+baseurl=http://mirror.centos.org/centos/7/atomic/x86_64/
 gpgcheck=0
 exclude=systemd systemd-container systemd-container-libs systemd-libs
