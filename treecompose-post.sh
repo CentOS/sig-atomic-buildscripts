@@ -68,3 +68,7 @@ set -x
 
 cp -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl
 build-locale-archive
+
+# Disable firewalld - we include it but don't want it enabled by default
+# See https://pagure.io/atomic-wg/issue/372
+systemctl disable firewalld
