@@ -49,3 +49,6 @@ components:
     distgit:
       branch: master
       patches: drop
+    rpmwith:
+      - rust
+    build-network: true
