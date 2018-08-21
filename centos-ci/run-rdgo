@@ -5,12 +5,14 @@ basedir=$(cd $(dirname $0) && pwd)
 . ${basedir}/libtask.sh
 
 cd rdgo
-ln -sf ${buildscriptsdir}/overlay.yml .
+# Note this needs to point inside the container paths
+ln -sf /srv/src/overlay.yml .
 if ! test -d src; then
-    rpmdistro-gitoverlay init
+    run_assembler rpmdistro-gitoverlay init
 fi
 
 # Git fetch all the things
-rpmdistro-gitoverlay resolve --fetch-all
+run_assembler ls -al
+run_assembler rpmdistro-gitoverlay resolve --fetch-all
 # Do a build
-rpmdistro-gitoverlay build --touch-if-changed ${BUILD_LOGS}/changed.stamp --logdir=${BUILD_LOGS}
+run_assembler rpmdistro-gitoverlay build --touch-if-changed /srv/tmp/changed.stamp --logdir=/srv/home/build-logs
