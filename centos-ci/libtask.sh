@@ -7,14 +7,14 @@ assembler=quay.io/cgwalters/coreos-assembler
 
 prepare_job() {
     export WORKSPACE=$HOME/jobs/${JENKINS_JOB_NAME}
-    rm ${WORKSPACE} -rf
+    sudo rm ${WORKSPACE} -rf
     mkdir -p ${WORKSPACE}
 
     export CACHEDIR=$HOME/cache
     mkdir -p ${CACHEDIR}
 
     export BUILD_LOGS=$HOME/build-logs
-    rm ${BUILD_LOGS} -rf
+    sudo rm ${BUILD_LOGS} -rf
     mkdir ${BUILD_LOGS}
 
     . ~/rsync-password.sh
