@@ -39,7 +39,6 @@
     - ostree
     - fedpkg
     - PyYAML
-    - rpmdistro-gitoverlay
     - genisoimage
     - ansible
     - virt-install

@@ -3,6 +3,7 @@ build=centos-continuous
 OSTREE_BRANCH=${OSTREE_BRANCH:-continuous}
 ref=centos-atomic-host/7/x86_64/devel/${OSTREE_BRANCH}
 utils=$buildscriptsdir/centos-ci/utils
+assembler=quay.io/cgwalters/coreos-assembler
 
 prepare_job() {
     export WORKSPACE=$HOME/jobs/${JENKINS_JOB_NAME}
@@ -27,6 +28,11 @@ prepare_job() {
     grep '^ref =' ${buildscriptsdir}/config.ini
 
     cd ${WORKSPACE}
+}
+
+run_assembler() {
+    sudo docker pull ${assembler}
+    sudo docker run --rm --privileged -v ${buildscriptsdir}:/srv/src -v ${WORKSPACE}:/srv/tmp -v $(cd ~ && pwd):/srv/home -v $(pwd):/srv/build -w /srv/build ${assembler} "$@"
 }
 
 # Avoid recursion
