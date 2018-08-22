@@ -37,5 +37,6 @@ ostree --repo=ostree/repo summary -u
 
 for v in ostree; do
     sudo chown -R -h $USER:$USER ${v}/
+    find ${v}/ -type d -exec chmod a+rX {} +
     rsync --delete --stats -a ${v}/ sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/
 done
