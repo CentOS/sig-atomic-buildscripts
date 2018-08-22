@@ -14,6 +14,7 @@ if ${basedir}/run-rdgo; then
 fi
 
 for v in rdgo; do
+    sudo chown -R -h $USER:$USER ${v}/
     rsync --delete --stats -a ${v}/ sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/
 done
 
