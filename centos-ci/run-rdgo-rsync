@@ -15,7 +15,7 @@ fi
 
 for v in rdgo; do
     sudo chown -R -h $USER:$USER ${v}/
-    find ${v}/ -exec chmod a+rX {} +
+    find ${v}/ ! -type l -exec chmod a+rX {} +
     rsync --delete --stats -a ${v}/ sig-atomic@artifacts.ci.centos.org::sig-atomic/${build}/${v}/
 done
 
