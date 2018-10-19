@@ -38,6 +38,8 @@ components:
   - src: github:projectatomic/atomic-devmode
 
   - src: github:ostreedev/ostree
+    # https://github.com/dustymabe/ignition-dracut/pull/26
+    freeze: 1db0db3d7aa98e3db98ba93f7fc2e17305f95007
     distgit:
       branch: master
       patches: drop
