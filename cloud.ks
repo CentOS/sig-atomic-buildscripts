@@ -10,7 +10,7 @@ user --name=none
 
 firewall --disabled
 
-bootloader --timeout=1 --append="no_timer_check console=tty1 console=ttyS0,115200n8"
+bootloader --timeout=1 --append="no_timer_check console=tty1 console=ttyS0,115200n8 crashkernel=auto"
 
 network --bootproto=dhcp --onboot=on
 # We use NetworkManager, and Avahi doesn't make much sense in the cloud
