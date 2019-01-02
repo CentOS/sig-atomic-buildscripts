@@ -53,7 +53,7 @@
 
     "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
 
-    "automatic_version_prefix": "7.1811",
+    "automatic_version_prefix": "7.1812",
 
     "postprocess-script": "treecompose-post.sh",
 
