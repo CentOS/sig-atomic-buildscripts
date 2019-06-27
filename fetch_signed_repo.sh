@@ -37,7 +37,7 @@ cd ${BuildDir}
 
 # Init, make sure we have the bits we need installed. 
 cp -f ${GitDir}/rhel-atomic-rebuild.repo /etc/yum.repos.d/
-yum -y install ostree rpm-ostree glib2 docker libvirt epel-release libgsystem
+yum -y install ostree rpm-ostree glib2 docker libvirt epel-release libgsystem centos-release-atomic
 
 
 if [ -f ${GitDir}/atomic7-testing.repo ]; then
