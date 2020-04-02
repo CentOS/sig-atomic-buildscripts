@@ -1,4 +1,5 @@
 [atomic7-testing]
 name=atomic7-testing
-baseurl=http://cbs.centos.org/repos/atomic7-testing/x86_64/os/
+#baseurl=http://cbs.centos.org/repos/atomic7-testing/x86_64/os/
+baseurl=https://download.copr.fedorainfracloud.org/results/jasonbrooks/rpm-ostree-toolbox/epel-7-x86_64
 gpgcheck=0
